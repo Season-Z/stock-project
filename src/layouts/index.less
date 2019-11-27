@@ -1,0 +1,54 @@
+.layout {
+  height: 100vh;
+
+  .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    -webkit-transition: color 0.3s;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+  .logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+    color: #fff;
+    text-align: center;
+    line-height: 32px;
+  }
+
+  .headerBar {
+    background: #fff;
+    padding: 0 24px 0 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .addBtn {
+      margin-left: 15px;
+    }
+
+    .userCenter {
+      padding-left: 15px;
+      display: inline-block;
+    }
+  }
+
+  .pageContent {
+    margin: 24px 16px;
+    padding: 24px;
+    background: #fff;
+  }
+
+  & :global .ant-layout-content {
+    min-height: auto;
+  }
+}
