@@ -49,7 +49,7 @@ function Stock(props) {
     console.log(record);
   };
 
-  const showModal = () => setModel({ modalParams: {}, visible: true });
+  const showModal = record => setModel({ modalParams: record, visible: true });
 
   const handleOk = useCallback(params => {
     console.log(params);
@@ -63,7 +63,7 @@ function Stock(props) {
     title: '操作',
     render: (text, record) => (
       <Fragment>
-        <Button type="primary" size="small">
+        <Button type="primary" size="small" onClick={() => showModal(record)}>
           编辑
         </Button>
         <Popconfirm
@@ -84,10 +84,11 @@ function Stock(props) {
   return (
     <div>
       <PageHeader title={route.name} />
-      <Button type="primary" onClick={showModal} style={{ marginBottom: '16px' }}>
-        新增入库产品
-      </Button>
-      <Search placeholder="产品名称" onSearch={searchProduct} style={{ width: 200 }} />
+      <Search
+        placeholder="产品名称"
+        onSearch={searchProduct}
+        style={{ width: 200, marginBottom: '16px' }}
+      />
       <Table columns={newColumns} dataSource={[]} rowKey="_id" pagination={pagination} />
       {model.visible && <StockModal {...model} saveModal={handleOk} handleCancel={handleCancel} />}
     </div>

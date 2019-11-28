@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Modal, Input, InputNumber } from 'antd';
-import UploadImg from '@/components/UploadImg';
+import CreateProductForm from '@/components/CreateProductForm';
 
 const formItemLayout = {
   labelCol: {
@@ -13,12 +13,12 @@ const formItemLayout = {
     sm: { span: 20 },
   },
 };
-const { TextArea } = Input;
 
 function StockModal(props) {
+  const productForm = useRef(null);
   const { getFieldDecorator, validateFields } = props.form;
   const { visible, modalParams, saveModal, handleCancel } = props;
-  const { id, productImg, productType, productName, productCount } = modalParams;
+  const { id, productCount } = modalParams;
 
   const handleOk = () => {
     validateFields((err, values) => {
@@ -42,48 +42,24 @@ function StockModal(props) {
       okText="确认"
       cancelText="取消"
     >
-      <Form {...formItemLayout}>
-        <Form.Item label="id" style={{ display: 'none' }}>
-          {getFieldDecorator('id', { initialValue: id })(<Input />)}
-        </Form.Item>
-        <Form.Item label="产品图片">
-          {getFieldDecorator('productImg', {
-            initialValue: productImg,
-          })(<UploadImg setImgUrl={setImgUrl} />)}
-        </Form.Item>
-        <Form.Item label="产品类别">
-          {getFieldDecorator('productType', {
-            initialValue: productType,
-            rules: [
-              {
-                required: true,
-                message: '请输入产品类别',
-              },
-            ],
-          })(<Input placeholder="产品类别" />)}
-        </Form.Item>
-        <Form.Item label="产品名称">
-          {getFieldDecorator('productName', {
-            initialValue: productName,
-            rules: [
-              {
-                required: true,
-                message: '请输入产品名称',
-              },
-            ],
-          })(<Input placeholder="产品名称" />)}
-        </Form.Item>
-        <Form.Item label="产品描述">
-          {getFieldDecorator('productCount', {
-            initialValue: productCount,
-          })(<TextArea rows={3} placeholder="产品描述" />)}
-        </Form.Item>
-        <Form.Item label="库存数量">
-          {getFieldDecorator('productCount', {
-            initialValue: productCount,
-          })(<InputNumber disabled />)}
-        </Form.Item>
-      </Form>
+      <CreateProductForm
+        modalParams={modalParams}
+        wrappedComponentRef={productForm}
+        render={() => {
+          return (
+            <Fragment>
+              <Form.Item label="id" style={{ display: 'none' }}>
+                {getFieldDecorator('id', { initialValue: id })(<Input />)}
+              </Form.Item>
+              <Form.Item label="库存数量">
+                {getFieldDecorator('productCount', {
+                  initialValue: productCount,
+                })(<InputNumber disabled />)}
+              </Form.Item>
+            </Fragment>
+          );
+        }}
+      />
     </Modal>
   );
 }

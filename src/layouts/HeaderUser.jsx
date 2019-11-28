@@ -10,11 +10,6 @@ const getDropMenu = () => (
         <Icon type="setting" /> 修改密码
       </span>
     </Menu.Item>
-    <Menu.Item>
-      <span style={{ display: 'block' }}>
-        <Icon type="pushpin" /> 偏好设置
-      </span>
-    </Menu.Item>
     <Menu.Divider />
     <Menu.Item>
       <span style={{ display: 'block' }}>

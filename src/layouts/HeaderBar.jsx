@@ -1,7 +1,7 @@
 import React from 'react';
-import { Layout, Icon, Button } from 'antd';
-import PropTypes from 'prop-types';
-import HeaderSelect from './HeaderSelect';
+import { Layout, Icon } from 'antd';
+// import PropTypes from 'prop-types';
+// import HeaderSelect from './HeaderSelect';
 import HeaderUser from './HeaderUser';
 import styles from './index.less';
 
@@ -18,10 +18,10 @@ function HeaderBar(props) {
         onClick={toggleCollapsed}
       />
       <div>
-        <HeaderSelect />
-        <Button type="primary" ghost icon="plus" className={styles.addBtn}>
+        {/* <HeaderSelect /> */}
+        {/* <Button type="primary" ghost icon="plus" className={styles.addBtn}>
           新建
-        </Button>
+        </Button> */}
         <HeaderUser />
       </div>
     </Header>
