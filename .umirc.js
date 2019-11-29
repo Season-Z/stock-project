@@ -22,7 +22,7 @@ export default {
         antd: true,
         dva: true,
         dynamicImport: { webpackChunkName: true },
-        title: 'leqi-web',
+        title: '库存',
         dll: false,
 
         routes: {
@@ -37,4 +37,10 @@ export default {
       },
     ],
   ],
+  proxy: {
+    '/api': {
+      target: 'http://localhost:4000',
+      changeOrigin: true,
+    },
+  },
 };

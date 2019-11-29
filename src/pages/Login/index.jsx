@@ -1,29 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Form, Icon, Input, Button, message } from 'antd';
+import { Layout, Tabs, message } from 'antd';
+import request from '@/utils/request';
+import storage from '@/utils/storage';
+import LoginForm from './LoginForm';
 
 import styles from './index.less';
 import bgHomeImage from '@/assets/bg_home.jpg';
 
-const FormItem = Form.Item;
 const { Header, Content } = Layout;
+const { TabPane } = Tabs;
 
 function Login(props) {
-  const { getFieldDecorator } = props.form;
+  const [activeKey, setActiveKey] = useState('login');
 
-  const handleSubmit = async () => {
-    props.form.validateFields(async (err, values) => {
-      if (err) {
-        return;
-      }
+  const changeTabs = key => setActiveKey(key);
 
-      const { code, msg } = await props.loginStore.login(values);
+  const handleSubmit = async values => {
+    if (activeKey === 'login') {
+      const result = await request.post('/api/user/login', values);
+      console.log(result);
+      storage.setItem('token', result.token);
+      message.success('登录成功');
+      setTimeout(() => window.location.replace('/'), 500);
+    } else {
+      await request.post('/api/user/register', values);
 
-      if (code === '1000000') {
-        message.success(msg);
-        window.location.replace('/');
-      }
-    });
+      message.success(`添加新用户【${values.username}】成功`);
+      setTimeout(() => window.location.replace('/login'), 500);
+    }
   };
 
   return (
@@ -33,47 +38,14 @@ function Login(props) {
       </Header>
       <Content className={styles.loginContent}>
         <img src={bgHomeImage} alt="bg_img" className={styles.contentImg} />
-        <Form onSubmit={handleSubmit} className={styles.loginForm}>
-          <div className={styles.title}>登录</div>
-          <FormItem>
-            {getFieldDecorator('username', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入用户名',
-                },
-              ],
-            })(
-              <Input
-                className={styles.input}
-                addonBefore={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="账号"
-              />,
-            )}
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('password', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入登录密码',
-                },
-              ],
-            })(
-              <Input
-                className={styles.input}
-                addonBefore={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type="password"
-                placeholder="登录密码"
-              />,
-            )}
-          </FormItem>
-          <FormItem>
-            <Button type="primary" htmlType="submit" className={styles.loginFormButton}>
-              登录
-            </Button>
-          </FormItem>
-        </Form>
+        <Tabs activeKey={activeKey} onChange={changeTabs} className={styles.loginForm}>
+          <TabPane tab="登录" key="login">
+            <LoginForm handleSubmit={handleSubmit} btnName="登录" />
+          </TabPane>
+          <TabPane tab="注册" key="register">
+            <LoginForm handleSubmit={handleSubmit} btnName="注册" />
+          </TabPane>
+        </Tabs>
       </Content>
     </Layout>
   );
@@ -83,4 +55,4 @@ Login.propTypes = {
   form: PropTypes.object,
 };
 
-export default Form.create()(Login);
+export default Login;

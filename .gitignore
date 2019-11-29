@@ -18,3 +18,5 @@
 .umi-production
 
 .github
+
+/server/node_modules
