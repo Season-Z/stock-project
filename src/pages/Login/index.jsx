@@ -12,6 +12,7 @@ const { Header, Content } = Layout;
 const { TabPane } = Tabs;
 
 function Login(props) {
+  const { history } = props;
   const [activeKey, setActiveKey] = useState('login');
 
   const changeTabs = key => setActiveKey(key);
@@ -19,15 +20,14 @@ function Login(props) {
   const handleSubmit = async values => {
     if (activeKey === 'login') {
       const result = await request.post('/api/user/login', values);
-      console.log(result);
       storage.setItem('token', result.token);
       message.success('登录成功');
-      setTimeout(() => window.location.replace('/'), 500);
+      setTimeout(() => history.replace('/'), 500);
     } else {
       await request.post('/api/user/register', values);
 
       message.success(`添加新用户【${values.username}】成功`);
-      setTimeout(() => window.location.replace('/login'), 500);
+      setTimeout(() => history.replace('/login'), 500);
     }
   };
 
@@ -40,10 +40,10 @@ function Login(props) {
         <img src={bgHomeImage} alt="bg_img" className={styles.contentImg} />
         <Tabs activeKey={activeKey} onChange={changeTabs} className={styles.loginForm}>
           <TabPane tab="登录" key="login">
-            <LoginForm handleSubmit={handleSubmit} btnName="登录" />
+            <LoginForm handleSubmit={handleSubmit} type="login" btnName="登录" />
           </TabPane>
           <TabPane tab="注册" key="register">
-            <LoginForm handleSubmit={handleSubmit} btnName="注册" />
+            <LoginForm handleSubmit={handleSubmit} type="register" btnName="注册" />
           </TabPane>
         </Tabs>
       </Content>
@@ -53,6 +53,7 @@ function Login(props) {
 
 Login.propTypes = {
   form: PropTypes.object,
+  history: PropTypes.object,
 };
 
 export default Login;

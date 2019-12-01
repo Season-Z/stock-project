@@ -17,7 +17,7 @@ const formItemLayout = {
 };
 
 function LoginForm(props) {
-  const { handleSubmit, btnName } = props;
+  const { handleSubmit, btnName, type } = props;
   const { getFieldDecorator, validateFields } = props.form;
 
   const saveForm = () => {
@@ -52,22 +52,25 @@ function LoginForm(props) {
           ],
         })(<Input className={styles.input} type="password" placeholder="登录密码" />)}
       </FormItem>
-      <FormItem label="类型">
-        {getFieldDecorator('role', {
-          rules: [
-            {
-              required: true,
-              message: '请选择登录类型',
-            },
-          ],
-        })(
-          <Radio.Group>
-            <Radio value={1}>管理员</Radio>
-            <Radio value={2}>入库人员</Radio>
-            <Radio value={3}>出库人员</Radio>
-          </Radio.Group>,
-        )}
-      </FormItem>
+      {type === 'register' && (
+        <FormItem label="类型">
+          {getFieldDecorator('role', {
+            rules: [
+              {
+                required: true,
+                message: '请选择登录类型',
+              },
+            ],
+          })(
+            <Radio.Group>
+              <Radio value={1}>管理员</Radio>
+              <Radio value={2}>入库人员</Radio>
+              <Radio value={3}>出库人员</Radio>
+            </Radio.Group>,
+          )}
+        </FormItem>
+      )}
+
       <FormItem wrapperCol={{ xs: { span: 24 }, sm: { span: 24 } }}>
         <Button type="primary" onClick={saveForm} className={styles.loginFormButton}>
           {btnName}

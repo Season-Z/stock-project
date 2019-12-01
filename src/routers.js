@@ -19,7 +19,7 @@ const routes = [
     component: '../pages/Storage',
   },
   {
-    path: '/delivery ',
+    path: '/delivery',
     name: '出库日志',
     icon: 'logout',
     component: '../pages/Delivery',

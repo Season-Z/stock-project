@@ -11,24 +11,6 @@ const resCode = {
   1000005: '该用户未激活，无法登陆',
 };
 
-const checkCode = response => {
-  const { code, message: errorMsg } = response.data;
-  const msg = resCode[code];
-
-  if (code === 1000002) {
-    // store.dispatch(userLoginOut());
-  }
-
-  if (msg) {
-    notification.error({
-      message: '请求错误',
-      description: errorMsg || msg,
-    });
-  }
-
-  return !msg;
-};
-
 const instance = axios.create({
   timeout: 25000,
   withCredentials: true,
@@ -56,15 +38,12 @@ instance.interceptors.response.use(
     if (!success) {
       notification.error({
         message: '请求错误',
-        description: message,
+        description: (code && resCode[code]) || message,
       });
-      return Promise.reject(response.data);
-    }
-    if (code && resCode[code]) {
-      notification.error({
-        message: '请求错误',
-        description: resCode[code],
-      });
+      if (code == 10000) {
+        setTimeout(() => window.location.replace('/login'), 500);
+      }
+
       return Promise.reject(response.data);
     }
 

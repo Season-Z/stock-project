@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Layout, Icon } from 'antd';
-// import PropTypes from 'prop-types';
-// import HeaderSelect from './HeaderSelect';
 import HeaderUser from './HeaderUser';
+import { layoutContext } from './context';
 import styles from './index.less';
 
 const { Header } = Layout;
 
-function HeaderBar(props) {
-  const { collapsed, toggleCollapsed } = props;
+function HeaderBar() {
+  const { collapsed, toggleCollapsed } = useContext(layoutContext);
 
   return (
     <Header className={styles.headerBar}>
@@ -18,16 +17,10 @@ function HeaderBar(props) {
         onClick={toggleCollapsed}
       />
       <div>
-        {/* <HeaderSelect /> */}
-        {/* <Button type="primary" ghost icon="plus" className={styles.addBtn}>
-          新建
-        </Button> */}
         <HeaderUser />
       </div>
     </Header>
   );
 }
-
-HeaderBar.propTypes = {};
 
 export default HeaderBar;

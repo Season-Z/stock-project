@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Layout } from 'antd';
 import SiderMenu from './SiderMenu';
 import HeaderBar from './HeaderBar';
+import { LayoutWrapper } from './context';
 
 import styles from './index.less';
 
@@ -19,7 +20,9 @@ export default function BasicLayout(props) {
         <SiderMenu />
       </Sider>
       <Layout>
-        <HeaderBar collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
+        <LayoutWrapper value={{ ...props, collapsed, toggleCollapsed }}>
+          <HeaderBar />
+        </LayoutWrapper>
         <Content className={styles.pageContent}>{props.children}</Content>
       </Layout>
     </Layout>

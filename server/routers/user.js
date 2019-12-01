@@ -4,9 +4,10 @@ const { createToken } = require('../utils/token');
 
 const router = express.Router();
 
-router.get('/info', function(req, res) {
+router.get('/info', async function(req, res) {
   if (req.session) {
-    const { username, role } = req.session;
+    const { username } = req.session;
+    const { role } = await User.findOne({ username });
     res.status(200).json({ success: true, message: '请求成功', data: { username, role } });
   } else {
     res.json(500).json({ success: false, message: '服务器出错' });
@@ -34,17 +35,17 @@ router.post('/register', async function(req, res) {
 });
 
 router.post('/login', async function(req, res) {
-  const { username, password, role } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const result = await User.findOne({ username, password, role });
+    const result = await User.findOne({ username, password });
 
     if (!result) {
       res.status(200).json({ success: false, message: '用户名或密码错误' });
       return;
     }
 
-    const token = createToken({ username, password, role });
+    const token = createToken({ username, password });
     res.status(200).json({ success: true, message: '登录成功', token });
   } catch (error) {
     console.log(error);

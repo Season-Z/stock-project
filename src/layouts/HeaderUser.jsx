@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Dropdown, Menu, Avatar, Icon } from 'antd';
 import request from '@/utils/request';
 import storage from '@/utils/storage';
+import { layoutContext } from './context';
+import { ROLE_MENU, getUserInfo } from '@/utils/config';
+
 import styles from './index.less';
 
 function HeaderUser() {
+  const { location, history } = useContext(layoutContext);
+
   const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
     request.get('/api/user/info').then(val => {
@@ -13,10 +18,19 @@ function HeaderUser() {
     });
   }, []);
 
+  useEffect(() => {
+    const roles = ROLE_MENU[location.pathname];
+    const { role } = getUserInfo();
+
+    if (!roles.includes(role)) {
+      history.replace('/');
+    }
+  }, [location.pathname]);
+
   const logout = async () => {
     storage.removeItem('token');
     storage.removeItem('userInfo');
-    window.location.href = '/login';
+    history.replace('/login');
   };
 
   const getDropMenu = () => (
