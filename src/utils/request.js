@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { message, notification } from 'antd';
 import storage from '@/utils/storage';
+// import { BASE_URL } from '@/utils/config';
 // import store from '@/redux';
 // import { userLoginOut } from '@/redux/user/action';
 
@@ -14,7 +15,7 @@ const resCode = {
 const instance = axios.create({
   timeout: 25000,
   withCredentials: true,
-  // baseURL: 'http://127.0.0.1:4000'
+  // baseURL: BASE_URL,
 });
 
 instance.interceptors.request.use(

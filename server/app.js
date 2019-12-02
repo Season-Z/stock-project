@@ -5,14 +5,17 @@ const bodyParser = require('body-parser');
 
 const auth = require('./middleware/auth');
 const userRouter = require('./routers/user');
+const productRouter = require('./routers/product');
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '2100000kb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 // token等拦截
 app.use(auth);
+
 app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
 
 mongoose.connect(
   'mongodb://39.98.140.218:27017/stock',

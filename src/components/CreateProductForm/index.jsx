@@ -21,24 +21,29 @@ class CreateProductForm extends Component {
       if (err) {
         return;
       }
-
       return values;
     });
   };
-  setImgUrl = url => {
-    console.log(url);
+  setImgUrl = ({ imageId, imageUrl }) => {
+    this.props.form.setFieldsValue({
+      imageId,
+      imageUrl,
+    });
   };
   render() {
     const { getFieldDecorator } = this.props.form;
     const { modalParams, render } = this.props;
-    const { productImg, productType, productName, productMemo } = modalParams;
+    const { imageId, imageUrl, productType, productName, productMemo } = modalParams;
 
+    getFieldDecorator('imageUrl', {
+      initialValue: imageUrl,
+    });
     return (
       <Form {...formItemLayout}>
         <Form.Item label="产品图片">
-          {getFieldDecorator('productImg', {
-            initialValue: productImg,
-          })(<UploadImg setImgUrl={this.setImgUrl} />)}
+          {getFieldDecorator('imageId', {
+            initialValue: imageId,
+          })(<UploadImg setImgUrl={this.setImgUrl} imageUrl={imageUrl} />)}
         </Form.Item>
         <Form.Item label="产品类别">
           {getFieldDecorator('productType', {
@@ -49,7 +54,7 @@ class CreateProductForm extends Component {
                 message: '请输入产品类别',
               },
             ],
-          })(<Input placeholder="产品类别" />)}
+          })(<Input placeholder="产品类别" allowClear />)}
         </Form.Item>
         <Form.Item label="产品名称">
           {getFieldDecorator('productName', {
@@ -60,12 +65,12 @@ class CreateProductForm extends Component {
                 message: '请输入产品名称',
               },
             ],
-          })(<Input placeholder="产品名称" />)}
+          })(<Input placeholder="产品名称" allowClear />)}
         </Form.Item>
         <Form.Item label="产品描述">
           {getFieldDecorator('productMemo', {
             initialValue: productMemo,
-          })(<TextArea rows={3} placeholder="产品描述" />)}
+          })(<TextArea rows={3} placeholder="产品描述" allowClear />)}
         </Form.Item>
         {render && render()}
       </Form>
@@ -82,4 +87,4 @@ CreateProductForm.defaultProps = {
   modalParams: {},
 };
 
-export default Form.create()(CreateProductForm);
+export default CreateProductForm;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Upload, Icon, message } from 'antd';
+import { Upload, Icon, message, notification } from 'antd';
 import PropTypes from 'prop-types';
+import storage from '@/utils/storage';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -21,24 +22,39 @@ function beforeUpload(file) {
 }
 
 class UploadImg extends React.Component {
-  state = {
-    imageUrl: '',
-    loading: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      imageUrl: props.imageUrl || '',
+      loading: false,
+    };
+  }
 
   handleChange = info => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
+
     if (info.file.status === 'done') {
+      this.setState({ loading: false });
+      const { success, message, data: imgData } = info.file.response;
+      if (!success) {
+        notification.error({
+          message: '请求错误',
+          description: message,
+        });
+        return;
+      }
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, imageUrl => {
-        this.props.setImgUrl(imageUrl);
+        console.log(imgData);
+
+        this.props.setImgUrl({ imageId: imgData.imgId, imageUrl });
 
         this.setState({
           imageUrl,
-          loading: false,
         });
       });
     }
@@ -52,6 +68,7 @@ class UploadImg extends React.Component {
       </div>
     );
     const { imageUrl } = this.state;
+    const authorization = storage.getItem('token');
 
     return (
       <Upload
@@ -59,9 +76,10 @@ class UploadImg extends React.Component {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        action={`/api/product/upload`}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
+        headers={{ authorization }}
       >
         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>

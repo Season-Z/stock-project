@@ -1,9 +1,9 @@
-import React, { memo, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { memo, useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Icon } from 'antd';
 import withRouter from 'umi/withRouter';
 import routes from '../routers';
-import { ROLE_MENU, getUserInfo, checkPromise } from '@/utils/config';
+import { checkPromise } from '@/utils/config';
 
 const { Item: MenuItem } = Menu;
 
@@ -12,12 +12,7 @@ const SiderMenu = memo(function SiderMenu(props) {
   const [selectedKeys, setSelectedKeys] = useState([pathname]);
   const [openKeys, setOpenKeys] = useState([]);
   const subMenus = useMemo(() => routes.filter(v => v.routes).map(v => v.path), [routes]);
-  const routesMenu = useCallback(
-    routes.filter(v => {
-      return checkPromise(v.path);
-    }),
-    [routes],
-  );
+  const routesMenu = useMemo(() => routes.filter(v => checkPromise(v.path)), [routes]);
 
   useEffect(() => {
     const pathArr = pathname
