@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
 
-module.exports = new mongoose.Schema(
+module.exports = new Schema(
   {
     imageId: String,
     imageUrl: String,
@@ -11,6 +11,7 @@ module.exports = new mongoose.Schema(
     productName: {
       type: String,
       required: [true, '产品名称是必须的'],
+      unique: true,
     },
     productMemo: String,
     productCount: {
@@ -20,6 +21,10 @@ module.exports = new mongoose.Schema(
     isStorage: {
       type: Boolean,
       default: true,
+    },
+    username: {
+      type: String,
+      required: [true, '用户名是必须的'],
     },
   },
   { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } },

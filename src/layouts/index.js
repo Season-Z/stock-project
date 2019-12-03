@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Layout } from 'antd';
 import SiderMenu from './SiderMenu';
 import HeaderBar from './HeaderBar';
+import { ROLE_MENU, getUserInfo } from '@/utils/config';
 import { LayoutWrapper } from './context';
 
 import styles from './index.less';
@@ -9,7 +10,17 @@ import styles from './index.less';
 const { Sider, Content } = Layout;
 
 export default function BasicLayout(props) {
+  const { location, history } = props;
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const roles = ROLE_MENU[location.pathname];
+    const { role } = getUserInfo();
+
+    if (!roles.includes(role)) {
+      history.replace('/');
+    }
+  }, [location.pathname]);
 
   const toggleCollapsed = useCallback(() => setCollapsed(collapsed => !collapsed), []);
 

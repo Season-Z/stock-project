@@ -38,6 +38,7 @@ function StockModal(props) {
     >
       <CreateProductForm
         form={props.form}
+        disabled={true}
         modalParams={modalParams}
         wrappedComponentRef={productForm}
         render={() => {
@@ -49,7 +50,7 @@ function StockModal(props) {
               <Form.Item label="库存数量">
                 {getFieldDecorator('productCount', {
                   initialValue: productCount,
-                })(<InputNumber min={0} />)}
+                })(<InputNumber disabled />)}
               </Form.Item>
             </Fragment>
           );

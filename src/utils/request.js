@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { message, notification } from 'antd';
 import storage from '@/utils/storage';
-// import { BASE_URL } from '@/utils/config';
-// import store from '@/redux';
-// import { userLoginOut } from '@/redux/user/action';
 
 const resCode = {
   10000: '请重新登录',
@@ -41,7 +38,7 @@ instance.interceptors.response.use(
         message: '请求错误',
         description: (code && resCode[code]) || message,
       });
-      if (code == 10000) {
+      if (code === 10000) {
         setTimeout(() => window.location.replace('/login'), 500);
       }
 
@@ -51,10 +48,11 @@ instance.interceptors.response.use(
     return response.data;
   },
   err => {
-    console.log(err);
+    const msg = err.response ? err.response.data.message : '';
+
     notification.error({
       message: '接口请求失败',
-      description: '服务器出了点小问题，请稍后再试！',
+      description: msg || '服务器出了点小问题，请稍后再试！',
     });
 
     return Promise.reject(err);

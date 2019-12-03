@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const auth = require('./middleware/auth');
 const userRouter = require('./routers/user');
 const productRouter = require('./routers/product');
+const logRouter = require('./routers/log');
 const app = express();
 
 app.use(cors());
@@ -16,7 +17,10 @@ app.use(auth);
 
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
+app.use('/api/log', logRouter);
 
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 mongoose.connect(
   'mongodb://39.98.140.218:27017/stock',
   { useNewUrlParser: true, useUnifiedTopology: true },

@@ -3,12 +3,11 @@ import { Dropdown, Menu, Avatar, Icon } from 'antd';
 import request from '@/utils/request';
 import storage from '@/utils/storage';
 import { layoutContext } from './context';
-import { ROLE_MENU, getUserInfo } from '@/utils/config';
 
 import styles from './index.less';
 
 function HeaderUser() {
-  const { location, history } = useContext(layoutContext);
+  const { history } = useContext(layoutContext);
 
   const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
@@ -17,15 +16,6 @@ function HeaderUser() {
       storage.setItem('userInfo', val.data);
     });
   }, []);
-
-  useEffect(() => {
-    const roles = ROLE_MENU[location.pathname];
-    const { role } = getUserInfo();
-
-    if (!roles.includes(role)) {
-      history.replace('/');
-    }
-  }, [location.pathname]);
 
   const logout = async () => {
     storage.removeItem('token');

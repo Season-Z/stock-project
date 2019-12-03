@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema(
   {
-    username: { type: String, required: [true, '用户名是必须的'] },
+    username: { type: String, unique: true },
     password: { type: String, required: [true, '密码是必须的'] },
     role: {
       type: Number,

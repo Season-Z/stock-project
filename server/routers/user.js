@@ -10,7 +10,7 @@ router.get('/info', async function(req, res) {
     const { role } = await User.findOne({ username });
     res.status(200).json({ success: true, message: '请求成功', data: { username, role } });
   } else {
-    res.json(500).json({ success: false, message: '服务器出错' });
+    res.status(500).json({ success: false, message: '服务器出错' });
   }
 });
 
@@ -30,7 +30,7 @@ router.post('/register', async function(req, res) {
     res.status(200).json({ success: true, message: '新增用户成功' });
   } catch (error) {
     console.log(error);
-    res.json(500).json({ success: false, message: '服务器出错' });
+    res.status(500).json({ success: false, message: '服务器出错' });
   }
 });
 
@@ -49,7 +49,19 @@ router.post('/login', async function(req, res) {
     res.status(200).json({ success: true, message: '登录成功', token });
   } catch (error) {
     console.log(error);
-    res.json(500).json({ success: false, message: '服务器出错' });
+    res.status(500).json({ success: false, message: '服务器出错' });
+  }
+});
+
+router.get('/list', async function(req, res) {
+  try {
+    const result = await User.find({ role: { $ne: 1 } }, { password: 0 });
+    // const data = result.map(v => ({ username: v.username, role: v.role, _id: v._id }));
+
+    res.status(200).json({ success: true, message: '请求成功', data: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: '服务器出错' });
   }
 });
 

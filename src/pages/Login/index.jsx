@@ -27,7 +27,7 @@ function Login(props) {
       await request.post('/api/user/register', values);
 
       message.success(`添加新用户【${values.username}】成功`);
-      setTimeout(() => history.replace('/login'), 500);
+      setTimeout(() => window.location.reload(), 500);
     }
   };
 

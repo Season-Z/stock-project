@@ -26,7 +26,7 @@ function CreateProduct(props) {
   return (
     <div style={{ paddingRight: '25px' }}>
       <PageHeader title={route.name} />
-      <CreateProductForm form={props.form} wrappedComponentRef={productForm} />
+      <CreateProductForm form={props.form} ref={productForm} />
       <div style={{ textAlign: 'right' }}>
         <Button type="primary" onClick={saveProduct}>
           保存

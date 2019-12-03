@@ -32,7 +32,7 @@ class CreateProductForm extends Component {
   };
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { modalParams, render } = this.props;
+    const { modalParams, render, disabled } = this.props;
     const { imageId, imageUrl, productType, productName, productMemo } = modalParams;
 
     getFieldDecorator('imageUrl', {
@@ -54,7 +54,7 @@ class CreateProductForm extends Component {
                 message: '请输入产品类别',
               },
             ],
-          })(<Input placeholder="产品类别" allowClear />)}
+          })(<Input placeholder="产品类别" disabled={disabled} />)}
         </Form.Item>
         <Form.Item label="产品名称">
           {getFieldDecorator('productName', {
@@ -65,12 +65,12 @@ class CreateProductForm extends Component {
                 message: '请输入产品名称',
               },
             ],
-          })(<Input placeholder="产品名称" allowClear />)}
+          })(<Input placeholder="产品名称" disabled={disabled} />)}
         </Form.Item>
         <Form.Item label="产品描述">
           {getFieldDecorator('productMemo', {
             initialValue: productMemo,
-          })(<TextArea rows={3} placeholder="产品描述" allowClear />)}
+          })(<TextArea rows={3} placeholder="产品描述" />)}
         </Form.Item>
         {render && render()}
       </Form>
@@ -81,10 +81,12 @@ class CreateProductForm extends Component {
 CreateProductForm.propTypes = {
   form: PropTypes.object,
   modalParams: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 
 CreateProductForm.defaultProps = {
   modalParams: {},
+  disabled: false,
 };
 
 export default CreateProductForm;
