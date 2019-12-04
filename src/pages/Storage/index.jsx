@@ -47,15 +47,20 @@ function Storage(props) {
 
   useEffect(() => {
     queryData();
+    /*eslint react-hooks/exhaustive-deps: "off"*/
   }, [pages.pageNo, pages.pageSize]);
 
   async function queryData() {
-    setPages(state => ({ ...state, loading: true }));
-    const params = { pageNo: pages.pageNo, pageSize: pages.pageSize, isStorage: true };
-    const result = await request.get('/api/log/list', { params });
-    const { data, count } = result.data;
+    try {
+      setPages(state => ({ ...state, loading: true }));
+      const params = { pageNo: pages.pageNo, pageSize: pages.pageSize, isStorage: true };
+      const result = await request.get('/api/log/list', { params });
+      const { data, count } = result.data;
 
-    setPages(state => ({ ...state, count, data, loading: false }));
+      setPages(state => ({ ...state, count, data, loading: false }));
+    } catch (error) {
+      setPages(state => ({ ...state, loading: false }));
+    }
   }
 
   const pagination = {
@@ -63,7 +68,7 @@ function Storage(props) {
     total: pages.count,
     pageSize: pages.pageSize,
     onChange: val => setPages(state => ({ ...state, pageNo: val })),
-    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageSize: size })),
+    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageNo: 1, pageSize: size })),
     pageSizeOptions: ['10', '20', '40'],
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`,

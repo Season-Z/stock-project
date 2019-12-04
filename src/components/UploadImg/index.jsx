@@ -14,9 +14,9 @@ function beforeUpload(file) {
   if (!isJpgOrPng) {
     message.error('只能上传 JPG/PNG 格式的图片!');
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
+  const isLt2M = file.size / 1024 / 1024 < 1;
   if (!isLt2M) {
-    message.error('图片必须小于 2MB!');
+    message.error('图片必须小于 1MB!');
   }
   return isJpgOrPng && isLt2M;
 }

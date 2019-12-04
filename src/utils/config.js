@@ -9,6 +9,7 @@ export const ROLE_MENU = {
   '/delivery': [3],
   '/stock': [1, 2, 3],
   '/operatingLog': [1],
+  '/user': [1],
 };
 
 export const getUserInfo = () => {

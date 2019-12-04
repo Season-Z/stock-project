@@ -40,7 +40,7 @@ class CreateProductForm extends Component {
     });
     return (
       <Form {...formItemLayout}>
-        <Form.Item label="产品图片">
+        <Form.Item label="产品图片" help="上传的图片应小于1M">
           {getFieldDecorator('imageId', {
             initialValue: imageId,
           })(<UploadImg setImgUrl={this.setImgUrl} imageUrl={imageUrl} />)}

@@ -39,7 +39,7 @@ function OperatingLog(props) {
     total: pages.count,
     pageSize: pages.pageSize,
     onChange: val => setPages(state => ({ ...state, pageNo: val })),
-    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageSize: size })),
+    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageNo: 1, pageSize: size })),
     pageSizeOptions: ['10', '20', '40'],
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`,

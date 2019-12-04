@@ -36,6 +36,12 @@ const routes = [
     icon: 'container',
     component: '../pages/OperatingLog',
   },
+  {
+    path: '/user',
+    name: '用户管理',
+    icon: 'user',
+    component: '../pages/User',
+  },
 ];
 
 module.exports = routes;

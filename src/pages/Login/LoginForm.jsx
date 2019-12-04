@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Radio } from 'antd';
+import { Form, Input, Button, message } from 'antd';
+import request from '@/utils/request';
+import storage from '@/utils/storage';
 
 import styles from './index.less';
 
@@ -17,21 +19,22 @@ const formItemLayout = {
 };
 
 function LoginForm(props) {
-  const { handleSubmit, btnName, type } = props;
-  const { getFieldDecorator, validateFields } = props.form;
+  const { btnName } = props;
+  const { getFieldDecorator } = props.form;
 
-  const saveForm = () => {
-    validateFields(async (err, values) => {
-      if (err) {
-        return;
-      }
+  const saveForm = async e => {
+    e.preventDefault();
 
-      handleSubmit(values);
-    });
+    const values = props.form.getFieldsValue();
+
+    const result = await request.post('/api/user/login', values);
+    storage.setItem('token', result.token);
+    message.success('登录成功');
+    window.location.replace('/home');
   };
 
   return (
-    <Form {...formItemLayout}>
+    <Form {...formItemLayout} onSubmit={saveForm}>
       <FormItem label="账号">
         {getFieldDecorator('username', {
           rules: [
@@ -52,27 +55,9 @@ function LoginForm(props) {
           ],
         })(<Input className={styles.input} type="password" placeholder="登录密码" />)}
       </FormItem>
-      {type === 'register' && (
-        <FormItem label="类型">
-          {getFieldDecorator('role', {
-            rules: [
-              {
-                required: true,
-                message: '请选择登录类型',
-              },
-            ],
-          })(
-            <Radio.Group>
-              <Radio value={1}>管理员</Radio>
-              <Radio value={2}>入库人员</Radio>
-              <Radio value={3}>出库人员</Radio>
-            </Radio.Group>,
-          )}
-        </FormItem>
-      )}
 
       <FormItem wrapperCol={{ xs: { span: 24 }, sm: { span: 24 } }}>
-        <Button type="primary" onClick={saveForm} className={styles.loginFormButton}>
+        <Button type="primary" htmlType="submit" className={styles.loginFormButton}>
           {btnName}
         </Button>
       </FormItem>
@@ -83,7 +68,6 @@ function LoginForm(props) {
 LoginForm.propTypes = {
   btnName: PropTypes.string,
   form: PropTypes.object,
-  handleSubmit: PropTypes.func,
 };
 
 export default Form.create()(LoginForm);

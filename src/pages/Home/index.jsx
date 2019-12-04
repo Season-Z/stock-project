@@ -1,10 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-function Home(props) {
-  return <div>home</div>;
+function Home() {
+  return <div>库存管理首页</div>;
 }
-
-Home.propTypes = {};
 
 export default Home;

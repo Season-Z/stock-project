@@ -26,12 +26,6 @@ function HeaderUser() {
   const getDropMenu = () => (
     <Menu>
       <Menu.Item>
-        <span style={{ display: 'block' }}>
-          <Icon type="setting" /> 修改密码
-        </span>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item>
         <span style={{ display: 'block' }} onClick={logout}>
           <Icon type="logout" /> 退出登录
         </span>

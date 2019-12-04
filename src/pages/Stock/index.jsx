@@ -42,18 +42,22 @@ function Stock(props) {
   }, []);
 
   async function queryData() {
-    setLoading(true);
-    const params = {
-      pageNo: pages.pageNo,
-      pageSize: pages.pageSize,
-      search,
-      username: users.value,
-    };
-    const result = await request.get('/api/product/list', { params });
-    const { data, count } = result.data;
+    try {
+      setLoading(true);
+      const params = {
+        pageNo: pages.pageNo,
+        pageSize: pages.pageSize,
+        search,
+        username: users.value,
+      };
+      const result = await request.get('/api/product/list', { params });
+      const { data, count } = result.data;
 
-    setPages(state => ({ ...state, count, data }));
-    setLoading(false);
+      setPages(state => ({ ...state, count, data }));
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   }
 
   // 删除
@@ -135,7 +139,7 @@ function Stock(props) {
     total: pages.count,
     pageSize: pages.pageSize,
     onChange: val => setPages(state => ({ ...state, pageNo: val })),
-    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageSize: size })),
+    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageNo: 1, pageSize: size })),
     pageSizeOptions: ['10', '20', '40'],
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`,
