@@ -6,7 +6,7 @@ import CreateProductForm from '@/components/CreateProductForm';
 function StockModal(props) {
   const productForm = useRef(null);
   const { getFieldDecorator, validateFields } = props.form;
-  const { visible, modalParams, loading, saveModal, handleCancel } = props;
+  const { visible, role, modalParams, loading, saveModal, handleCancel } = props;
   const { _id: id, productCount } = modalParams;
 
   const handleOk = () => {
@@ -18,6 +18,8 @@ function StockModal(props) {
       saveModal(values);
     });
   };
+
+  const isDisabled = role !== 1;
 
   return (
     <Modal
@@ -38,23 +40,20 @@ function StockModal(props) {
     >
       <CreateProductForm
         form={props.form}
-        disabled={true}
         modalParams={modalParams}
         wrappedComponentRef={productForm}
-        render={() => {
-          return (
-            <Fragment>
-              <Form.Item label="id" style={{ display: 'none' }}>
-                {getFieldDecorator('_id', { initialValue: id })(<Input />)}
-              </Form.Item>
-              <Form.Item label="库存数量">
-                {getFieldDecorator('productCount', {
-                  initialValue: productCount,
-                })(<InputNumber disabled />)}
-              </Form.Item>
-            </Fragment>
-          );
-        }}
+        render={() => (
+          <Fragment>
+            <Form.Item label="id" style={{ display: 'none' }}>
+              {getFieldDecorator('_id', { initialValue: id })(<Input />)}
+            </Form.Item>
+            <Form.Item label="库存数量">
+              {getFieldDecorator('productCount', {
+                initialValue: productCount,
+              })(<InputNumber disabled={isDisabled} />)}
+            </Form.Item>
+          </Fragment>
+        )}
       />
     </Modal>
   );

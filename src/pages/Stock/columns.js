@@ -1,11 +1,20 @@
 import React from 'react';
+
 export const columns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: '8%',
+    render: (t, r, i) => i + 1,
+  },
   {
     title: '产品图片',
     dataIndex: 'imageUrl',
     key: 'imageUrl',
     width: '20%',
-    render: text => (text ? <img src={text} alt="avatar" style={{ height: '120px' }} /> : ''),
+    render: text =>
+      (text ? <img src={text} alt="avatar" style={{ maxWidth: '200px', maxHeight: '120px' }} /> : ''),
   },
   {
     title: '产品名称',

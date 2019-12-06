@@ -7,7 +7,14 @@ import DropdownMenu from '@/components/DropdownMenu';
 import UserModal from './UserModal';
 import request from '@/utils/request';
 
+// eslint-disable-next-line
 const columns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    render: (t, r, i) => i + 1,
+  },
   {
     title: '用户名称',
     dataIndex: 'username',
@@ -44,7 +51,7 @@ function User(props) {
   const [model, setModel] = useState({ visible: false, modalParams: {} });
   const [pages, setPages] = useState({
     pageNo: 1,
-    pageSize: 2,
+    pageSize: 10,
     count: 0,
     data: [],
     loading: false,
@@ -52,7 +59,7 @@ function User(props) {
 
   useEffect(() => {
     queryData();
-    /*eslint react-hooks/exhaustive-deps: "off"*/
+    /* eslint react-hooks/exhaustive-deps: "off" */
   }, [pages.pageNo, pages.pageSize]);
 
   async function queryData() {
@@ -92,7 +99,12 @@ function User(props) {
     const sendRequest = async () => {
       await request.delete(`/api/user/${record._id}`);
       message.success(`成功删除${record.username}`);
-      queryData();
+
+      if (pages.data.length === 1) {
+        setPages(state => ({ ...state, pageNo: 1 }));
+      } else {
+        queryData();
+      }
     };
 
     Modal.confirm({
@@ -131,7 +143,7 @@ function User(props) {
     pageSize: pages.pageSize,
     onChange: val => setPages(state => ({ ...state, pageNo: val })),
     onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageNo: 1, pageSize: size })),
-    pageSizeOptions: ['2', '20', '40'],
+    pageSizeOptions: ['10', '20', '40'],
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`,
   };

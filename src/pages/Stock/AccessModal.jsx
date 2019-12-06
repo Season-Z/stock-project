@@ -28,6 +28,7 @@ function AccessModal(props) {
     });
   };
   const name = type === 'storage' ? '入' : '出';
+  const num = type === 'storage' ? '增加' : '减少';
   return (
     <Modal
       title={`产品${name}库`}
@@ -59,7 +60,7 @@ function AccessModal(props) {
             initialValue: productCount,
           })(<Input disabled />)}
         </Form.Item>
-        <Form.Item label={`${name}库的数量`}>
+        <Form.Item label={`${name}库的数量`} help={`要${num}的数量`}>
           {getFieldDecorator('count')(<InputNumber min={0} />)}
         </Form.Item>
       </Form>

@@ -7,6 +7,12 @@ import request from '@/utils/request';
 
 const columns = [
   {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    render: (t, r, i) => i + 1,
+  },
+  {
     title: '产品名称',
     dataIndex: 'productName',
     key: 'productName',
@@ -47,7 +53,7 @@ function Storage(props) {
 
   useEffect(() => {
     queryData();
-    /*eslint react-hooks/exhaustive-deps: "off"*/
+    /* eslint react-hooks/exhaustive-deps: "off" */
   }, [pages.pageNo, pages.pageSize]);
 
   async function queryData() {

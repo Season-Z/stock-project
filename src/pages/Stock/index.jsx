@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Input, message, Modal, Select } from 'antd';
 import PageHeader from '@/components/PageHeader';
@@ -32,7 +32,7 @@ function Stock(props) {
 
   useEffect(() => {
     queryData();
-    /*eslint react-hooks/exhaustive-deps: "off"*/
+    /* eslint react-hooks/exhaustive-deps: "off" */
   }, [pages.pageNo, pages.pageSize, search, users.value]);
 
   useEffect(() => {
@@ -65,7 +65,12 @@ function Stock(props) {
     const sendRequest = async () => {
       await request.delete(`/api/product/${record._id}`);
       message.success(`成功删除${record.productName}`);
-      queryData();
+
+      if (pages.data.length === 1) {
+        setPages(state => ({ ...state, pageNo: 1 }));
+      } else {
+        queryData();
+      }
     };
 
     Modal.confirm({
@@ -89,46 +94,50 @@ function Stock(props) {
 
   // 编辑保存
   const handleOk = useCallback(async params => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    await request.post('/api/product/save', params);
-    setLoading(false);
-    message.success('操作成功');
+      await request.post('/api/product/save', params);
+      setLoading(false);
+      message.success('操作成功');
 
-    handleCancel();
-    handleAccessCancel();
-    queryData();
+      handleCancel();
+      handleAccessCancel();
+      queryData();
+    } catch (error) {
+      setLoading(false);
+    }
   }, []);
 
   const newColumns = columns.concat({
     title: '操作',
-    width: '20%',
+    width: '15%',
     render: (_, record) => {
       const { role } = roleRef.current;
       const dataList = [
         {
-          event: () => setModel({ modalParams: record, visible: true }),
-          name: '编辑',
-          role: 1,
-        },
-        {
           event: () =>
             setAccessModel({ modalParams: { ...record, type: 'storage' }, visible: true }),
           name: '入库',
-          role: 2,
+          role: [2],
         },
         {
           event: () =>
             setAccessModel({ modalParams: { ...record, type: 'delivery' }, visible: true }),
           name: '出库',
-          role: 3,
+          role: [3],
+        },
+        {
+          event: () => setModel({ modalParams: record, visible: true }),
+          name: '编辑',
+          role: [1, 2],
         },
         {
           event: () => deleteProduct(record),
           name: '删除',
-          role: 1,
+          role: [1],
         },
-      ].filter(v => v.role === role);
+      ].filter(v => v.role.includes(role));
 
       return <DropdownMenu dataList={dataList} num={2} />;
     },
@@ -144,9 +153,8 @@ function Stock(props) {
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`,
   };
-
   return (
-    <div>
+    <Fragment>
       <PageHeader title={route.name} />
       <Search
         placeholder="搜索"
@@ -174,7 +182,13 @@ function Stock(props) {
         scroll={{ x: 1230 }}
       />
       {model.visible && (
-        <StockModal {...model} loading={loading} saveModal={handleOk} handleCancel={handleCancel} />
+        <StockModal
+          {...model}
+          role={roleRef.current.role}
+          loading={loading}
+          saveModal={handleOk}
+          handleCancel={handleCancel}
+        />
       )}
       {accessModel.visible && (
         <AccessModal
@@ -184,7 +198,7 @@ function Stock(props) {
           handleCancel={handleAccessCancel}
         />
       )}
-    </div>
+    </Fragment>
   );
 }
 

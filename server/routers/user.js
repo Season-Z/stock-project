@@ -4,7 +4,7 @@ const { createToken } = require('../utils/token');
 
 const router = express.Router();
 
-router.get('/info', async function(req, res) {
+router.get('/info', async (req, res) => {
   if (req.session) {
     const { username } = req.session;
     const { role } = await User.findOne({ username });
@@ -14,27 +14,7 @@ router.get('/info', async function(req, res) {
   }
 });
 
-router.post('/register', async function(req, res) {
-  const { username, password, role } = req.body;
-
-  try {
-    const isExit = await User.findOne({ username });
-    if (isExit) {
-      res.status(200).json({ success: false, message: '用户名已存在' });
-      return;
-    }
-
-    const user = new User({ username, password, role });
-    await user.save();
-
-    res.status(200).json({ success: true, message: '新增用户成功' });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: '服务器出错' });
-  }
-});
-
-router.post('/login', async function(req, res) {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -53,13 +33,13 @@ router.post('/login', async function(req, res) {
   }
 });
 
-router.get('/list', async function(req, res) {
+router.get('/list', async (req, res) => {
   try {
     const { pageNo: page, pageSize: size } = req.query;
 
     // 不分页查询
     if (!page || !size) {
-      const result = await User.find({ role: { $ne: 1 }, type: true }, { password: 0 });
+      const result = await User.find({ role: { $ne: 1 } }, { password: 0 });
       res.status(200).json({ success: true, message: '请求成功', data: result });
       return;
     }
@@ -68,11 +48,11 @@ router.get('/list', async function(req, res) {
     const pageSize = +size || 2;
     const skip = (+pageNo - 1) * pageSize;
 
-    const count = await User.countDocuments({ type: true });
-    const list = await User.find({ type: true })
+    const count = await User.countDocuments();
+    const list = await User.find()
       .limit(+pageSize)
       .skip(skip)
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .exec();
 
     const params = {
@@ -89,12 +69,13 @@ router.get('/list', async function(req, res) {
   }
 });
 
-router.post('/save', async function(req, res) {
+router.post('/save', async (req, res) => {
   const { id, username, ...rest } = req.body;
   try {
     if (id) {
       // 编辑时
       await User.findByIdAndUpdate({ _id: id }, { ...rest });
+      res.status(200).json({ success: true, message: '请求成功' });
       return;
     }
 
@@ -116,11 +97,11 @@ router.post('/save', async function(req, res) {
   }
 });
 
-router.delete('/:id', async function(req, res) {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    await User.findByIdAndUpdate({ _id: id }, { type: false });
+    await User.deleteOne({ _id: id });
     res.status(200).json({ success: true, message: '删除成功' });
   } catch (error) {
     console.log(error);

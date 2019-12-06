@@ -7,6 +7,7 @@ const auth = require('./middleware/auth');
 const userRouter = require('./routers/user');
 const productRouter = require('./routers/product');
 const logRouter = require('./routers/log');
+
 const app = express();
 
 app.use(cors());
@@ -22,13 +23,13 @@ app.use('/api/log', logRouter);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(
-  'mongodb://39.98.140.218:27017/stock',
+  'mongodb://47.110.66.228:27017/stock',
   { useNewUrlParser: true, useUnifiedTopology: true },
-  function(err) {
+  err => {
     if (err) {
-      console.error('数据库连接错误：' + err);
+      console.error(`数据库连接错误：${err}`);
     } else {
-      app.listen(4000, function() {
+      app.listen(4000, () => {
         console.log('数据库连接成功, listened: 4000');
       });
     }

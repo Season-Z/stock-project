@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Modal, Input, Button, Radio } from 'antd';
-
+// eslint-disable-next-line
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -16,7 +16,7 @@ const formItemLayout = {
 function UserModal(props) {
   const { getFieldDecorator, validateFields, getFieldValue } = props.form;
   const { visible, modalParams, loading, saveModal, handleCancel } = props;
-  const { _id, username, role } = modalParams;
+  const { _id, username, password, role } = modalParams;
 
   const handleOk = () => {
     validateFields((err, values) => {
@@ -24,7 +24,8 @@ function UserModal(props) {
         return;
       }
 
-      saveModal({ ...values });
+      delete values.confirm;
+      saveModal(values);
     });
   };
   const validatePassword = (rule, value, callback) => {
@@ -69,11 +70,13 @@ function UserModal(props) {
         </Form.Item>
         <Form.Item label="密码">
           {getFieldDecorator('password', {
+            initialValue: password,
             rules: [{ required: true, message: '请输入密码' }],
           })(<Input type="password" placeholder="密码" />)}
         </Form.Item>
         <Form.Item label="确认密码">
           {getFieldDecorator('confirm', {
+            initialValue: password,
             rules: [{ required: true, message: '请确认密码' }, { validator: validatePassword }],
           })(<Input type="password" placeholder="确认密码" />)}
         </Form.Item>

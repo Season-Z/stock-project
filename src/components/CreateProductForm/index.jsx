@@ -16,23 +16,24 @@ const formItemLayout = {
 };
 
 class CreateProductForm extends Component {
-  handleSaveProduct = () => {
-    return this.props.form.validateFields((err, values) => {
+  handleSaveProduct = () =>
+    this.props.form.validateFields((err, values) => {
       if (err) {
         return;
       }
       return values;
     });
-  };
+
   setImgUrl = ({ imageId, imageUrl }) => {
     this.props.form.setFieldsValue({
       imageId,
       imageUrl,
     });
   };
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { modalParams, render, disabled } = this.props;
+    const { modalParams, render } = this.props;
     const { imageId, imageUrl, productType, productName, productMemo } = modalParams;
 
     getFieldDecorator('imageUrl', {
@@ -45,17 +46,6 @@ class CreateProductForm extends Component {
             initialValue: imageId,
           })(<UploadImg setImgUrl={this.setImgUrl} imageUrl={imageUrl} />)}
         </Form.Item>
-        <Form.Item label="产品类别">
-          {getFieldDecorator('productType', {
-            initialValue: productType,
-            rules: [
-              {
-                required: true,
-                message: '请输入产品类别',
-              },
-            ],
-          })(<Input placeholder="产品类别" disabled={disabled} />)}
-        </Form.Item>
         <Form.Item label="产品名称">
           {getFieldDecorator('productName', {
             initialValue: productName,
@@ -65,7 +55,18 @@ class CreateProductForm extends Component {
                 message: '请输入产品名称',
               },
             ],
-          })(<Input placeholder="产品名称" disabled={disabled} />)}
+          })(<Input placeholder="产品名称「保存后将无法更改」" />)}
+        </Form.Item>
+        <Form.Item label="产品类别">
+          {getFieldDecorator('productType', {
+            initialValue: productType,
+            rules: [
+              {
+                required: true,
+                message: '请输入产品类别',
+              },
+            ],
+          })(<Input placeholder="产品类别" />)}
         </Form.Item>
         <Form.Item label="产品描述">
           {getFieldDecorator('productMemo', {
@@ -81,12 +82,10 @@ class CreateProductForm extends Component {
 CreateProductForm.propTypes = {
   form: PropTypes.object,
   modalParams: PropTypes.object,
-  disabled: PropTypes.bool,
 };
 
 CreateProductForm.defaultProps = {
   modalParams: {},
-  disabled: false,
 };
 
 export default CreateProductForm;

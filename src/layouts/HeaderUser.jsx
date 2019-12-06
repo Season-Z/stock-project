@@ -1,27 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Dropdown, Menu, Avatar, Icon } from 'antd';
-import request from '@/utils/request';
-import storage from '@/utils/storage';
 import { layoutContext } from './context';
 
 import styles from './index.less';
 
 function HeaderUser() {
-  const { history } = useContext(layoutContext);
-
-  const [userInfo, setUserInfo] = useState({});
-  useEffect(() => {
-    request.get('/api/user/info').then(val => {
-      setUserInfo(val.data);
-      storage.setItem('userInfo', val.data);
-    });
-  }, []);
-
-  const logout = async () => {
-    storage.removeItem('token');
-    storage.removeItem('userInfo');
-    history.replace('/login');
-  };
+  const { userInfo, logout } = useContext(layoutContext);
 
   const getDropMenu = () => (
     <Menu>
