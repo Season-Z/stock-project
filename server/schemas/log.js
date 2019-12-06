@@ -1,15 +1,17 @@
-const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
 
-module.exports = new mongoose.Schema(
+module.exports = new Schema(
   {
     isStorage: {
       type: Boolean,
       default: true,
     },
     username: String,
-    productName: String,
-    productCount: Number,
     count: Number,
+    products: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
   },
   { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } },
 );

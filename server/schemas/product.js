@@ -12,6 +12,7 @@ module.exports = new Schema(
       type: String,
       required: [true, '产品名称是必须的'],
       unique: true,
+      trim: true,
     },
     productMemo: String,
     productCount: {

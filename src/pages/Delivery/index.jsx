@@ -16,11 +16,17 @@ const columns = [
     title: '产品名称',
     dataIndex: 'productName',
     key: 'productName',
+    render: (t, r) => {
+      return r.products.productName;
+    },
   },
   {
     title: '库存数量（总量）',
     dataIndex: 'productCount',
     key: 'productCount',
+    render: (t, r) => {
+      return r.products.productCount;
+    },
   },
   {
     title: '出库数量',

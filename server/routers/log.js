@@ -10,12 +10,12 @@ router.get('/list', async function(req, res) {
     const pageNo = +page || 1;
     const pageSize = +size || 2;
     const skip = (+pageNo - 1) * pageSize;
-    // const { username } = req.session;
 
     const values = isStorage === undefined ? null : { isStorage };
 
     const count = await Log.countDocuments(values);
     const list = await Log.find(values)
+      .populate('products', ['productName', 'productCount'])
       .limit(+pageSize)
       .skip(skip)
       .sort({ createdAt: -1 })

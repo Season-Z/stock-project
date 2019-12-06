@@ -46,10 +46,9 @@ router.post('/save', async (req, res) => {
 
       const log = new Log({
         username,
-        productName,
-        productCount: totalCount,
         count,
         isStorage,
+        products: _id,
       });
       await log.save();
 
