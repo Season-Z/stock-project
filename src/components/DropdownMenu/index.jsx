@@ -72,19 +72,15 @@ function DropdownMenu(props) {
 
   const count = num + 1;
 
-  return (
-    <div>
-      {dataLen > count ? renderDrop(dataList, num) : renderMenu(dataList)}
-    </div>
-  );
+  return <div>{dataLen > count ? renderDrop(dataList, num) : renderMenu(dataList)}</div>;
 }
 
 DropdownMenu.propTypes = {
   dataList: PropTypes.array.isRequired,
-  num: PropTypes.number
+  num: PropTypes.number,
 };
 DropdownMenu.defaultProps = {
-  num: 2
+  num: 2,
 };
 
 export default DropdownMenu;

@@ -19,7 +19,7 @@ function CreateProduct(props) {
       okText: '继续添加',
       cancelText: '前往产品列表',
       onCancel: () => history.push('/stock'),
-      onOk: () => window.location.reload(),
+      onOk: () => (window.location.href = '/createProduct'),
     });
   };
 

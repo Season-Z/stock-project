@@ -67,6 +67,22 @@ router.post('/save', async (req, res) => {
     const product = new Product({ ...req.body, username });
     await product.save();
 
+    // 图片移动与删除
+    fs.readdir('img/', function(err, paths) {
+      if (err) {
+        throw err;
+      }
+
+      paths.forEach(function(path) {
+        if (path === req.body.imageId) {
+          const readable = fs.createReadStream(`img/${path}`);
+          const writeable = fs.createWriteStream(`images/${path}`);
+          readable.pipe(writeable);
+        }
+        fs.unlinkSync(`img/${path}`);
+      });
+    });
+
     res.status(200).json({ success: true, message: '新增产品成功' });
   } catch (error) {
     console.log(error);
@@ -118,7 +134,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const { imageId, productName } = await Product.findById({ _id: id });
 
-    fs.unlink(path.join('img/', imageId), err => {
+    fs.unlink(path.join('images/', imageId), err => {
       if (err) {
         console.log(`删除图片出错：${err}`);
       }

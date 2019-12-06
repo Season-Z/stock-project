@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Layout } from 'antd';
 import SiderMenu from './SiderMenu';
 import HeaderBar from './HeaderBar';
-import { ROLE_MENU } from '@/utils/config';
 import { LayoutWrapper } from './context';
 import request from '@/utils/request';
 import storage from '@/utils/storage';
@@ -12,7 +11,7 @@ import styles from './index.less';
 const { Sider, Content } = Layout;
 
 export default function BasicLayout(props) {
-  const { location, history } = props;
+  const { history } = props;
 
   const [collapsed, setCollapsed] = useState(false);
   const [userInfo, setUserInfo] = useState({});
@@ -24,20 +23,11 @@ export default function BasicLayout(props) {
     });
   }, []);
 
-  useEffect(() => {
-    const roles = ROLE_MENU[location.pathname];
-    const { role } = userInfo;
-
-    if (!roles || !roles.includes(role)) {
-      history.replace('/home');
-    }
-  }, [location.pathname, history, userInfo]);
-
-  const logout = useCallback(async () => {
+  const logout = async () => {
     storage.removeItem('token');
     storage.removeItem('userInfo');
     history.replace('/login');
-  });
+  };
 
   const toggleCollapsed = useCallback(() => setCollapsed(collapsed => !collapsed), []);
 

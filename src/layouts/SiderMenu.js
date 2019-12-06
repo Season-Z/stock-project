@@ -11,13 +11,15 @@ const SiderMenu = memo(props => {
   const { userInfo } = props;
   const { pathname } = props.location;
   const [selectedKeys, setSelectedKeys] = useState([pathname]);
-  const routesMenu = useMemo(() => routes.filter(v => {
+  const routesMenu = useMemo(() => {
+    return routes.filter(v => {
       const roles = ROLE_MENU[v.path];
       if (!roles) {
         return false;
       }
       return roles.includes(userInfo.role);
-    }), [routes, userInfo]);
+    });
+  }, [userInfo]);
 
   useEffect(() => {
     setSelectedKeys([pathname]);
