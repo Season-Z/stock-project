@@ -131,7 +131,7 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { imageId, productName } = await Product.findById({ _id: id });
+    const { imageId } = await Product.findById({ _id: id });
 
     fs.unlink(path.join('images/', imageId), err => {
       if (err) {
@@ -140,7 +140,7 @@ router.delete('/:id', async (req, res) => {
     });
 
     await Product.deleteOne({ _id: id });
-    await Log.deleteMany({ productName });
+    await Log.deleteMany({ products: id });
     res.status(200).json({ success: true, message: '删除成功' });
   } catch (error) {
     console.log(error);

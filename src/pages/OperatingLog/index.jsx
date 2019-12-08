@@ -56,8 +56,10 @@ function OperatingLog(props) {
             </span>
             <span className={styles.username}>{val.username}</span>
             <span className={styles.strong}>{val.isStorage ? '入' : '出'}</span>库了
-            <span className={styles.strong}>{val.count}</span>件产品：
-            <span className={styles.productName}>{val.productName}</span>
+            <span className={styles.strong}>{val.count}</span>件 「
+            <span className={styles.productName}>{val.products && val.products.productName}</span>」
+            ，目前产品总数为
+            <span className={styles.strong}>{val.products && val.products.productCount}</span>件
           </Timeline.Item>
         ))}
       </Timeline>

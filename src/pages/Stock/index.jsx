@@ -66,7 +66,7 @@ function Stock(props) {
       await request.delete(`/api/product/${record._id}`);
       message.success(`成功删除${record.productName}`);
 
-      if (pages.data.length === 1) {
+      if (pages.data.length === 1 && pages.pageNo !== 1) {
         setPages(state => ({ ...state, pageNo: 1 }));
       } else {
         queryData();

@@ -17,7 +17,7 @@ const columns = [
     dataIndex: 'productName',
     key: 'productName',
     render: (t, r) => {
-      return r.products.productName;
+      return r.products && r.products.productName;
     },
   },
   {
@@ -25,7 +25,7 @@ const columns = [
     dataIndex: 'productCount',
     key: 'productCount',
     render: (t, r) => {
-      return r.products.productCount;
+      return r.products && r.products.productCount;
     },
   },
   {
