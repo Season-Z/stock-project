@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
       return;
     }
 
-    const token = createToken({ username, password });
+    const token = createToken({ username, password, role: result.role });
     res.status(200).json({ success: true, message: '登录成功', token });
   } catch (error) {
     console.log(error);

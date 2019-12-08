@@ -1,11 +1,5 @@
 const routes = [
-  { path: '/', redirect: '/home' },
-  {
-    path: '/home',
-    name: '首页',
-    icon: 'home',
-    component: '../pages/Home',
-  },
+  { path: '/', redirect: '/stock' },
   {
     path: '/createProduct',
     name: '添加产品',

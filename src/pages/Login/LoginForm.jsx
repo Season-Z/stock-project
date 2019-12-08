@@ -30,7 +30,7 @@ function LoginForm(props) {
     const result = await request.post('/api/user/login', values);
     storage.setItem('token', result.token);
     message.success('登录成功');
-    window.location.replace('/home');
+    window.location.replace('/stock');
   };
 
   return (

@@ -17,18 +17,23 @@ router.post('/upload', uploadImg.single('avatar'), (req, res) => {
 
 router.post('/save', async (req, res) => {
   const { _id, productName, type, ...rest } = req.body;
-  const { username } = req.session;
+  const { username, role } = req.session;
   try {
     if (_id) {
       let isStorage = type === 'storage';
       let { count } = rest;
       let totalCount = rest.productCount;
+      let canLog = true;
 
       if (!type) {
         // 编辑请求
         const result = await Product.findById({ _id });
-        // 判断当前是入库还是出库。大于0为入库
-        isStorage = rest.productCount - result.productCount > 0;
+        // 判断当前是入库还是出库。大于0为入库，小于0为出库，等于0为入库人员的编辑操作
+        const num = rest.productCount - result.productCount;
+        isStorage = num > 0 && num !== 0;
+        // 编辑操作 不记录
+        canLog = !(num === 0);
+
         // 获取变化的产品数量
         count = Math.abs(rest.productCount - result.productCount);
 
@@ -44,13 +49,15 @@ router.post('/save', async (req, res) => {
         await Product.findByIdAndUpdate({ _id }, { productCount: totalCount });
       }
 
-      const log = new Log({
-        username,
-        count,
-        isStorage,
-        products: _id,
-      });
-      await log.save();
+      if (canLog) {
+        const log = new Log({
+          username,
+          count,
+          isStorage,
+          products: _id,
+        });
+        await log.save();
+      }
 
       res.status(200).json({ success: true, message: '更新产品成功' });
       return;

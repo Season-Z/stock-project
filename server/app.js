@@ -23,7 +23,7 @@ app.use('/api/log', logRouter);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(
-  'mongodb://47.110.66.228:27017/stock',
+  'mongodb://47.110.66.228:27017/stock_development',
   { useNewUrlParser: true, useUnifiedTopology: true },
   err => {
     if (err) {
