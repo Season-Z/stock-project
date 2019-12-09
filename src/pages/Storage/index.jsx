@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import moment from 'moment';
 import PageHeader from '@/components/PageHeader';
+import CommonSearch from '@/components/CommonSearch';
 import request from '@/utils/request';
 
 const columns = [
@@ -62,10 +63,10 @@ function Storage(props) {
     /* eslint react-hooks/exhaustive-deps: "off" */
   }, [pages.pageNo, pages.pageSize]);
 
-  async function queryData() {
+  async function queryData(values) {
     try {
       setPages(state => ({ ...state, loading: true }));
-      const params = { pageNo: pages.pageNo, pageSize: pages.pageSize, isStorage: true };
+      const params = { ...values, pageNo: pages.pageNo, pageSize: pages.pageSize, isStorage: true };
       const result = await request.get('/api/log/list', { params });
       const { data, count } = result.data;
 
@@ -74,6 +75,10 @@ function Storage(props) {
       setPages(state => ({ ...state, loading: false }));
     }
   }
+
+  const userCallback = useCallback(value => queryData({ username: value }), []);
+
+  const dateCallback = useCallback(value => queryData(value), []);
 
   const pagination = {
     current: pages.pageNo,
@@ -89,6 +94,7 @@ function Storage(props) {
   return (
     <Fragment>
       <PageHeader title={route.name} />
+      <CommonSearch userCallback={userCallback} dateCallback={dateCallback} />
       <Table
         columns={columns}
         dataSource={pages.data}

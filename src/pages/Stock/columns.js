@@ -1,20 +1,21 @@
 import React from 'react';
+import moment from 'moment';
 
 export const columns = [
   {
     title: '序号',
     dataIndex: 'index',
     key: 'index',
-    width: '8%',
+    width: '6%',
     render: (t, r, i) => i + 1,
   },
   {
     title: '产品图片',
     dataIndex: 'imageUrl',
     key: 'imageUrl',
-    width: '20%',
+    width: '15%',
     render: text =>
-      (text ? <img src={text} alt="avatar" style={{ maxWidth: '200px', maxHeight: '120px' }} /> : ''),
+      text ? <img src={text} alt="avatar" style={{ maxWidth: '200px', maxHeight: '120px' }} /> : '',
   },
   {
     title: '产品名称',
@@ -32,7 +33,7 @@ export const columns = [
     title: '产品描述',
     dataIndex: 'productMemo',
     key: 'productMemo',
-    width: '20%',
+    width: '15%',
   },
   {
     title: '库存数量',
@@ -45,5 +46,12 @@ export const columns = [
     dataIndex: 'username',
     key: 'username',
     width: '10%',
+  },
+  {
+    title: '修改时间',
+    dataIndex: 'updatedAt',
+    key: 'updatedAt',
+    width: '15%',
+    render: text => (text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : ''),
   },
 ];

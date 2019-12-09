@@ -5,6 +5,7 @@ import PageHeader from '@/components/PageHeader';
 import StockModal from './StockModal';
 import AccessModal from './AccessModal';
 import DropdownMenu from '@/components/DropdownMenu';
+import CommonSearch from '@/components/CommonSearch';
 import request from '@/utils/request';
 import { columns } from './columns';
 import { getUserInfo } from '@/utils/config';
@@ -19,10 +20,6 @@ function Stock(props) {
   const [accessModel, setAccessModel] = useState({ visible: false, modalParams: {} });
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState({
-    value: undefined,
-    list: [],
-  });
   const [pages, setPages] = useState({
     pageNo: 1,
     pageSize: 10,
@@ -33,22 +30,16 @@ function Stock(props) {
   useEffect(() => {
     queryData();
     /* eslint react-hooks/exhaustive-deps: "off" */
-  }, [pages.pageNo, pages.pageSize, search, users.value]);
+  }, [pages.pageNo, pages.pageSize, search]);
 
-  useEffect(() => {
-    request.get('/api/user/list').then(val => {
-      setUsers(state => ({ ...state, list: val.data }));
-    });
-  }, []);
-
-  async function queryData() {
+  async function queryData(values) {
     try {
       setLoading(true);
       const params = {
+        ...values,
         pageNo: pages.pageNo,
         pageSize: pages.pageSize,
         search,
-        username: users.value,
       };
       const result = await request.get('/api/product/list', { params });
       const { data, count } = result.data;
@@ -109,6 +100,10 @@ function Stock(props) {
     }
   }, []);
 
+  const userCallback = useCallback(value => queryData({ username: value }), []);
+
+  const dateCallback = useCallback(value => queryData(value), []);
+
   const newColumns = columns.concat({
     title: '操作',
     width: '15%',
@@ -156,30 +151,24 @@ function Stock(props) {
   return (
     <Fragment>
       <PageHeader title={route.name} />
-      <Search
-        placeholder="搜索"
-        onSearch={val => setSearch(val)}
-        style={{ width: 200, marginBottom: '16px' }}
+      <CommonSearch
+        userCallback={userCallback}
+        dateCallback={dateCallback}
+        render={() => (
+          <Search
+            placeholder="搜索"
+            onSearch={val => setSearch(val)}
+            style={{ width: 200, marginBottom: '16px' }}
+          />
+        )}
       />
-      <Select
-        placeholder="创建人"
-        style={{ width: '200px' }}
-        onChange={val => setUsers(state => ({ ...state, value: val }))}
-      >
-        <Select.Option value="">全部</Select.Option>
-        {users.list.map(v => (
-          <Select.Option key={v.username} value={v.username}>
-            {v.username}
-          </Select.Option>
-        ))}
-      </Select>
       <Table
         columns={newColumns}
         dataSource={pages.data}
         rowKey="_id"
         pagination={pagination}
         loading={loading}
-        scroll={{ x: 1230 }}
+        scroll={{ x: 1350 }}
       />
       {model.visible && (
         <StockModal

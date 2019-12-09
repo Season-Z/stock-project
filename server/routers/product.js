@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const Product = require('../models/Product');
 const Log = require('../models/Log');
+const { handleParams } = require('../utils/handler');
 
 const router = express.Router();
 const uploadImg = multer({ dest: 'img/' });
@@ -97,20 +98,24 @@ router.post('/save', async (req, res) => {
 });
 
 router.get('/list', async (req, res) => {
-  const { pageNo: page, pageSize: size, search, username } = req.query;
+  const { pageNo: page, pageSize: size, search, startTime, endTime, ...rest } = req.query;
   const pageNo = +page || 1;
   const pageSize = +size || 2;
   const skip = (+pageNo - 1) * pageSize;
 
   try {
     const searchParams = {
+      ...handleParams(rest),
       $or: [
         { productName: { $regex: search, $options: '$i' } },
         { productType: { $regex: search, $options: '$i' } },
       ],
     };
-    if (username) {
-      searchParams.username = username;
+    if (startTime && endTime) {
+      searchParams.createdAt = {
+        $gte: startTime,
+        $lt: endTime,
+      };
     }
 
     const count = await Product.countDocuments(searchParams);

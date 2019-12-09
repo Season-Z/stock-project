@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Timeline, Pagination, Empty, Spin } from 'antd';
 import moment from 'moment';
 import PageHeader from '@/components/PageHeader';
 import request from '@/utils/request';
+import CommonSearch from '@/components/CommonSearch';
 
 import styles from './index.less';
 
@@ -18,20 +19,27 @@ function OperatingLog(props) {
     loading: false,
   });
 
+  const queryData = async values => {
+    try {
+      setPages(state => ({ ...state, loading: true }));
+      const params = { ...values, pageNo: pages.pageNo, pageSize: pages.pageSize };
+      const result = await request.get('/api/log/list', { params });
+
+      const { data, count } = result.data;
+
+      setPages(state => ({ ...state, count, data, loading: false }));
+    } catch (error) {
+      setPages(state => ({ ...state, loading: false }));
+    }
+  };
+
+  const userCallback = useCallback(value => queryData({ username: value }), []);
+
+  const dateCallback = useCallback(value => queryData(value), []);
+
   useEffect(() => {
-    setPages(state => ({ ...state, loading: true }));
-    const params = { pageNo: pages.pageNo, pageSize: pages.pageSize };
-
-    request
-      .get('/api/log/list', { params })
-      .then(val => {
-        const { data, count } = val.data;
-
-        setPages(state => ({ ...state, count, data, loading: false }));
-      })
-      .catch(() => {
-        setPages(state => ({ ...state, loading: false }));
-      });
+    queryData();
+    /* eslint react-hooks/exhaustive-deps: "off" */
   }, [pages.pageNo, pages.pageSize]);
 
   const pagination = {
@@ -48,6 +56,7 @@ function OperatingLog(props) {
   return (
     <Spin spinning={pages.loading}>
       <PageHeader title={route.name} />
+      <CommonSearch userCallback={userCallback} dateCallback={dateCallback} />
       <Timeline className={styles.timeline}>
         {pages.data.map(val => (
           <Timeline.Item color={val.isStorage ? 'red' : 'green'} key={val._id}>
