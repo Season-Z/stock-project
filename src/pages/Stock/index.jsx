@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, message, Modal, Select } from 'antd';
+import { Table, Input, message, Modal } from 'antd';
 import PageHeader from '@/components/PageHeader';
 import StockModal from './StockModal';
 import AccessModal from './AccessModal';

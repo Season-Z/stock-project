@@ -1,5 +1,4 @@
 const routes = [
-  { path: '/', redirect: '/stock' },
   {
     path: '/createProduct',
     name: '添加产品',
