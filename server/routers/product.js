@@ -1,19 +1,28 @@
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
-const path = require('path');
 const Product = require('../models/Product');
 const Log = require('../models/Log');
 const { handleParams } = require('../utils/handler');
 
 const router = express.Router();
-const uploadImg = multer({ dest: 'img/' });
+
+const storage = multer.diskStorage({
+  //确定图片存储的位置
+  destination: function(req, file, cb) {
+    cb(null, './public/images');
+  },
+  //确定图片存储时的名字,注意，如果使用原名，可能会造成再次上传同一张图片的时候的冲突
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const uploadImg = multer({ storage });
 
 router.post('/upload', uploadImg.single('avatar'), (req, res) => {
-  const { path, filename } = req.file;
-  res
-    .status(200)
-    .json({ success: true, message: '上传成功', data: { imgUrl: path, imgId: filename } });
+  const imageUrl = `http://${req.headers.host}/images/${req.file.filename}`;
+
+  res.status(200).json({ success: true, message: '上传成功', data: { imageUrl } });
 });
 
 router.post('/save', async (req, res) => {
@@ -74,22 +83,6 @@ router.post('/save', async (req, res) => {
     const product = new Product({ ...req.body, username });
     await product.save();
 
-    // 图片移动与删除
-    fs.readdir('img/', function(err, paths) {
-      if (err) {
-        throw err;
-      }
-
-      paths.forEach(function(path) {
-        if (path === req.body.imageId) {
-          const readable = fs.createReadStream(`img/${path}`);
-          const writeable = fs.createWriteStream(`images/${path}`);
-          readable.pipe(writeable);
-        }
-        fs.unlinkSync(`img/${path}`);
-      });
-    });
-
     res.status(200).json({ success: true, message: '新增产品成功' });
   } catch (error) {
     console.log(error);
@@ -143,9 +136,10 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { imageId } = await Product.findById({ _id: id });
+    const { imageUrl } = await Product.findById({ _id: id });
+    const filename = imageUrl.split(`http://${req.headers.host}`)[1];
 
-    fs.unlink(path.join('images/', imageId), err => {
+    fs.unlink(`public/${filename}`, err => {
       if (err) {
         console.log(`删除图片出错：${err}`);
       }

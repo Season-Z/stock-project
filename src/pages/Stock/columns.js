@@ -15,7 +15,11 @@ export const columns = [
     key: 'imageUrl',
     width: '15%',
     render: text =>
-      text ? <img src={text} alt="avatar" style={{ maxWidth: '200px', maxHeight: '120px' }} /> : '',
+      text ? (
+        <img src={text} alt="产品图片" style={{ maxWidth: '200px', maxHeight: '120px' }} />
+      ) : (
+        ''
+      ),
   },
   {
     title: '产品名称',

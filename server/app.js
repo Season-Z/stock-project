@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const auth = require('./middleware/auth');
 const userRouter = require('./routers/user');
@@ -9,6 +10,8 @@ const productRouter = require('./routers/product');
 const logRouter = require('./routers/log');
 
 const app = express();
+//配置express的静态目录
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '2100000kb' }));

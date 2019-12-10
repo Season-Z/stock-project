@@ -101,7 +101,6 @@ function Stock(props) {
   }, []);
 
   const userCallback = useCallback(value => queryData({ username: value }), []);
-
   const dateCallback = useCallback(value => queryData(value), []);
 
   const newColumns = columns.concat({

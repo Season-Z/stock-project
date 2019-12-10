@@ -2,7 +2,6 @@ const { Schema } = require('mongoose');
 
 module.exports = new Schema(
   {
-    imageId: String,
     imageUrl: String,
     productType: {
       type: String,

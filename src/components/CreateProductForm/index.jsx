@@ -24,9 +24,8 @@ class CreateProductForm extends Component {
       return values;
     });
 
-  setImgUrl = ({ imageId, imageUrl }) => {
+  setImgUrl = ({ imageUrl }) => {
     this.props.form.setFieldsValue({
-      imageId,
       imageUrl,
     });
   };
@@ -34,16 +33,13 @@ class CreateProductForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { modalParams, render } = this.props;
-    const { imageId, imageUrl, productType, productName, productMemo } = modalParams;
+    const { imageUrl, productType, productName, productMemo } = modalParams;
 
-    getFieldDecorator('imageUrl', {
-      initialValue: imageUrl,
-    });
     return (
       <Form {...formItemLayout}>
         <Form.Item label="产品图片" help="上传的图片应小于1M">
-          {getFieldDecorator('imageId', {
-            initialValue: imageId,
+          {getFieldDecorator('imageUrl', {
+            initialValue: imageUrl,
           })(<UploadImg setImgUrl={this.setImgUrl} imageUrl={imageUrl} />)}
         </Form.Item>
         <Form.Item label="产品名称">
