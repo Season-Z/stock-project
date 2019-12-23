@@ -91,9 +91,9 @@ router.post('/save', async (req, res) => {
 });
 
 router.get('/list', async (req, res) => {
-  const { pageNo: page, pageSize: size, search, startTime, endTime, ...rest } = req.query;
+  const { pageNo: page, pageSize: size, search, startTime, endTime, isExport, ...rest } = req.query;
   const pageNo = +page || 1;
-  const pageSize = +size || 2;
+  const pageSize = size ? +size : null;
   const skip = (+pageNo - 1) * pageSize;
 
   try {
@@ -112,11 +112,13 @@ router.get('/list', async (req, res) => {
     }
 
     const count = await Product.countDocuments(searchParams);
-    const list = await Product.find(searchParams)
-      .limit(+pageSize)
-      .skip(skip)
-      .sort({ updatedAt: -1 })
-      .exec();
+    const list = isExport
+      ? await Product.find(searchParams)
+      : await Product.find(searchParams)
+          .limit(+pageSize)
+          .skip(skip)
+          .sort({ updatedAt: -1 })
+          .exec();
 
     const params = {
       pageNo,

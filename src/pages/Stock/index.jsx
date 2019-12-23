@@ -1,11 +1,13 @@
 import React, { useState, useCallback, useEffect, useRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, message, Modal } from 'antd';
+import { Table, Input, message, Modal, Button } from 'antd';
+import moment from 'moment';
 import PageHeader from '@/components/PageHeader';
 import StockModal from './StockModal';
 import AccessModal from './AccessModal';
 import DropdownMenu from '@/components/DropdownMenu';
 import CommonSearch from '@/components/CommonSearch';
+import Export from '@/utils/export';
 import request from '@/utils/request';
 import { columns } from './columns';
 import { getUserInfo } from '@/utils/config';
@@ -19,6 +21,11 @@ function Stock(props) {
   const [model, setModel] = useState({ visible: false, modalParams: {} });
   const [accessModel, setAccessModel] = useState({ visible: false, modalParams: {} });
   const [search, setSearch] = useState('');
+  const [otherSearch, setOtherSearch] = useState({
+    username: undefined,
+    startTime: undefined,
+    endTime: undefined,
+  });
   const [loading, setLoading] = useState(false);
   const [pages, setPages] = useState({
     pageNo: 1,
@@ -100,8 +107,44 @@ function Stock(props) {
     }
   }, []);
 
-  const userCallback = useCallback(value => queryData({ username: value }), []);
-  const dateCallback = useCallback(value => queryData(value), []);
+  const userCallback = useCallback(value => {
+    queryData({ username: value });
+    setOtherSearch(state => ({ ...state, username: value }));
+  }, []);
+  const dateCallback = useCallback(value => {
+    queryData(value);
+    setOtherSearch(state => ({ ...state, ...value }));
+  }, []);
+
+  const exportProduct = async () => {
+    try {
+      setLoading(true);
+      const params = {
+        pageNo: 1,
+        search,
+        isExport: true,
+        ...otherSearch,
+      };
+      const result = await request.get('/api/product/list', { params });
+      const data = result.data.data || [];
+      const exportData = data.map(v => ({
+        产品名称: v.productName,
+        产品类别: v.productType,
+        产品描述: v.productMemo,
+        库存数量: v.productCount,
+        创建人: v.username,
+        创建时间: moment(v.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        修改时间: moment(v.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+      }));
+
+      const ExportExcel = new Export({ data: exportData, filename: '产品数据' });
+      ExportExcel.handleExport();
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   const newColumns = columns.concat({
     title: '操作',
@@ -159,6 +202,11 @@ function Stock(props) {
             onSearch={val => setSearch(val)}
             style={{ width: 200, marginBottom: '16px' }}
           />
+        )}
+        renderBtn={() => (
+          <Button type="primary" onClick={exportProduct}>
+            导出
+          </Button>
         )}
       />
       <Table
