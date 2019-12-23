@@ -27,7 +27,7 @@ router.post('/upload', uploadImg.single('avatar'), (req, res) => {
 
 router.post('/save', async (req, res) => {
   const { _id, productName, type, ...rest } = req.body;
-  const { username, role } = req.session;
+  const { username } = req.session;
   try {
     if (_id) {
       let isStorage = type === 'storage';

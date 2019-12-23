@@ -8,7 +8,7 @@ import styles from './index.less';
 const { RangePicker } = DatePicker;
 
 function CommonSearch(props) {
-  const { render, userCallback, dateCallback } = props;
+  const { render, renderBtn, userCallback, dateCallback } = props;
   const [users, setUsers] = useState({ value: '', list: [] });
   const [date, setDate] = useState(undefined);
 
@@ -62,6 +62,7 @@ function CommonSearch(props) {
           onChange={changeDate}
         />
       </div>
+      {renderBtn && renderBtn()}
     </div>
   );
 }

@@ -9,6 +9,8 @@ const userRouter = require('./routers/user');
 const productRouter = require('./routers/product');
 const logRouter = require('./routers/log');
 
+const { DATABASE, PORT } = require('./utils/config');
+
 const app = express();
 //配置express的静态目录
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,16 +27,12 @@ app.use('/api/log', logRouter);
 
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(
-  'mongodb://47.110.66.228:27017/stock_development',
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  err => {
-    if (err) {
-      console.error(`数据库连接错误：${err}`);
-    } else {
-      app.listen(4000, () => {
-        console.log('数据库连接成功, listened: 4000');
-      });
-    }
-  },
-);
+mongoose.connect(DATABASE, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
+  if (err) {
+    console.error(`数据库连接错误：${err}`);
+  } else {
+    app.listen(PORT, () => {
+      console.log(`数据库连接成功, 库名:${DATABASE} listened: ${PORT}`);
+    });
+  }
+});

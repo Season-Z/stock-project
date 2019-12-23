@@ -1,5 +1,11 @@
 const routes = [
   {
+    path: '/homeEnd',
+    name: '首页产品',
+    icon: 'home',
+    component: '../pages/HomeEnd',
+  },
+  {
     path: '/createProduct',
     name: '添加产品',
     icon: 'plus-circle',

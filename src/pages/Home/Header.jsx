@@ -91,7 +91,8 @@ class Header extends React.Component {
             animation={{ x: -30, type: 'from', ease: 'easeOutQuad' }}
             className={styles['header0-logo']}
           >
-            <img width="100%" src={dataSource.logo.children} alt="img" />
+            {/* <img width="100%" src={dataSource.logo.children} alt="img" /> */}
+            <span style={{ color: '#fff' }}>库存</span>
           </TweenOne>
           {isMobile && (
             <div

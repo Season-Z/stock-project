@@ -4,7 +4,7 @@ const routes = require('./src/routers');
 export default {
   treeShaking: true,
   routes: [
-    { path: '/', redirect: '/home' },
+    { path: '/', redirect: '/stock' },
     {
       path: '/home',
       component: '../pages/Home',

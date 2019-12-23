@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start:main": "pm2 start ecosystem.config.js --only main --watch",
+    "start:other": "pm2 start ecosystem.config.js --only other --watch"
   },
   "keywords": [],
   "author": "",
