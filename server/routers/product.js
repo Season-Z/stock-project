@@ -139,13 +139,15 @@ router.delete('/:id', async (req, res) => {
 
   try {
     const { imageUrl } = await Product.findById({ _id: id });
-    const filename = imageUrl.split(`http://${req.headers.host}`)[1];
+    if (imageUrl) {
+      const filename = imageUrl.split(`http://${req.headers.host}`)[1];
 
-    fs.unlink(`public/${filename}`, err => {
-      if (err) {
-        console.log(`删除图片出错：${err}`);
-      }
-    });
+      fs.unlink(`public/${filename}`, err => {
+        if (err) {
+          console.log(`删除图片出错：${err}`);
+        }
+      });
+    }
 
     await Product.deleteOne({ _id: id });
     await Log.deleteMany({ products: id });
