@@ -32,7 +32,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   response => {
-    const { success, message, code } = response.data;
+    const { success, message, code, userInfo } = response.data;
     if (!success) {
       notification.error({
         message: '请求错误',
@@ -43,6 +43,10 @@ instance.interceptors.response.use(
       }
 
       return Promise.reject(response.data);
+    }
+
+    if (userInfo && Object.keys(userInfo).length) {
+      storage.setItem('userInfo', userInfo);
     }
 
     return response.data;

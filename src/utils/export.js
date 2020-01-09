@@ -23,7 +23,7 @@ export default class Export {
     function s2ab(s) {
       var buf = new ArrayBuffer(s.length);
       var view = new Uint8Array(buf);
-      for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+      for (var i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
       return buf;
     }
     var blob = new Blob([s2ab(wbout)], {
@@ -34,7 +34,7 @@ export default class Export {
 
   // 将blob对象创建bloburl，然后用a标签实现弹出下载框
   openDownloadDialog = (blob, fileName) => {
-    if (typeof blob == 'object' && blob instanceof Blob) {
+    if (typeof blob === 'object' && blob instanceof Blob) {
       blob = URL.createObjectURL(blob); // 创建blob地址
     }
     var aLink = document.createElement('a');
