@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Input, message, Modal, Button } from 'antd';
-import moment from 'moment';
 import PageHeader from '@/components/PageHeader';
 import StockModal from './StockModal';
 import AccessModal from './AccessModal';
@@ -131,13 +130,10 @@ function Stock(props) {
       const result = await request.get('/api/product/list', { params });
       const data = result.data.data || [];
       const exportData = data.map(v => ({
-        产品名称: v.productName,
         产品类别: v.productType,
+        产品名称: v.productName,
         产品描述: v.productMemo,
         库存数量: v.productCount,
-        创建人: v.username,
-        创建时间: moment(v.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-        修改时间: moment(v.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
       }));
 
       const ExportExcel = new Export({ data: exportData, filename: '产品数据' });
@@ -189,7 +185,7 @@ function Stock(props) {
     pageSize: pages.pageSize,
     onChange: val => setPages(state => ({ ...state, pageNo: val })),
     onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageNo: 1, pageSize: size })),
-    pageSizeOptions: ['10', '20', '40'],
+    pageSizeOptions: ['10', '20', '40', '100', '500'],
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`,
   };

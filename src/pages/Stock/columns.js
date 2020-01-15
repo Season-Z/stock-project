@@ -22,16 +22,16 @@ export const columns = [
       ),
   },
   {
-    title: '产品名称',
-    dataIndex: 'productName',
-    key: 'productName',
-    width: '15%',
-  },
-  {
     title: '产品类别',
     dataIndex: 'productType',
     key: 'productType',
     width: '10%',
+  },
+  {
+    title: '产品名称',
+    dataIndex: 'productName',
+    key: 'productName',
+    width: '15%',
   },
   {
     title: '产品描述',

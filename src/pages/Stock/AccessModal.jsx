@@ -18,17 +18,24 @@ function AccessModal(props) {
   const { visible, modalParams, loading, saveModal, handleCancel } = props;
   const { _id: id, productName, productCount, type } = modalParams;
 
+  const isStorage = type === 'storage';
+
   const handleOk = () => {
     validateFields((err, values) => {
       if (err) {
         return;
       }
 
+      const { count, client } = values;
+      // if (!isStorage && count) {
+
+      // }
+
       saveModal({ ...values, type });
     });
   };
-  const name = type === 'storage' ? '入' : '出';
-  const num = type === 'storage' ? '增加' : '减少';
+  const name = isStorage ? '入' : '出';
+  const num = isStorage ? '增加' : '减少';
   return (
     <Modal
       title={`产品${name}库`}
@@ -63,6 +70,11 @@ function AccessModal(props) {
         <Form.Item label={`${name}库的数量`} help={`要${num}的数量`}>
           {getFieldDecorator('count')(<InputNumber min={0} />)}
         </Form.Item>
+        {!isStorage && (
+          <Form.Item label="客户信息">
+            {getFieldDecorator('client')(<Input placeholder="客户信息" />)}
+          </Form.Item>
+        )}
       </Form>
     </Modal>
   );
