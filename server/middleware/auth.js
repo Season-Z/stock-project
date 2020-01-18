@@ -2,7 +2,8 @@ const { checkToken } = require('../utils/token');
 const { CHECK_EXCLUDES } = require('../utils/config');
 
 module.exports = (req, res, next) => {
-  if (CHECK_EXCLUDES.includes(req.url)) {
+  const url = req.url.includes('?') ? req.url.split('?')[0] : req.url;
+  if (CHECK_EXCLUDES.includes(url)) {
     next();
     return;
   }

@@ -45,7 +45,7 @@ router.get('/list', async (req, res) => {
     }
 
     const pageNo = +page || 1;
-    const pageSize = +size || 2;
+    const pageSize = +size || 10;
     const skip = (+pageNo - 1) * pageSize;
 
     const count = await User.countDocuments();

@@ -8,6 +8,7 @@ const auth = require('./middleware/auth');
 const userRouter = require('./routers/user');
 const productRouter = require('./routers/product');
 const logRouter = require('./routers/log');
+const viewProRouter = require('./routers/viewPro');
 
 const { DATABASE, PORT } = require('./utils/config');
 
@@ -24,6 +25,7 @@ app.use(auth);
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/log', logRouter);
+app.use('/api/viewPro', viewProRouter);
 
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);

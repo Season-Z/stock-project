@@ -92,7 +92,7 @@ class Header extends React.Component {
             className={styles['header0-logo']}
           >
             {/* <img width="100%" src={dataSource.logo.children} alt="img" /> */}
-            <span style={{ color: '#fff' }}>库存</span>
+            <span style={{ color: '#fff' }}>产品列表</span>
           </TweenOne>
           {isMobile && (
             <div

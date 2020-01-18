@@ -9,7 +9,7 @@ router.get('/list', async function(req, res) {
 
   try {
     const pageNo = +page || 1;
-    const pageSize = +size || 2;
+    const pageSize = +size || 10;
     const skip = (+pageNo - 1) * pageSize;
 
     const values = handleParams(rest);

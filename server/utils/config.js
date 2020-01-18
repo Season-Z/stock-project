@@ -2,7 +2,7 @@ exports.SECRET_KEY = 'jsonwebtoken';
 
 exports.TOKEN_CONTEXT = ['username', '_id', 'email'];
 
-exports.CHECK_EXCLUDES = ['/api/user/login'];
+exports.CHECK_EXCLUDES = ['/api/user/login', '/api/viewPro/list'];
 
 const BASE_CONFIG = {
   DATABASE: {
