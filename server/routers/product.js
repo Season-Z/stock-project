@@ -26,7 +26,7 @@ router.post('/upload', uploadImg.single('avatar'), (req, res) => {
 });
 
 router.post('/save', async (req, res) => {
-  const { _id, productName, type, ...rest } = req.body;
+  const { _id, productName, type, client, ...rest } = req.body;
   const { username } = req.session;
   try {
     if (_id) {
@@ -64,6 +64,7 @@ router.post('/save', async (req, res) => {
           username,
           count,
           isStorage,
+          client,
           products: _id,
         });
         await log.save();
@@ -91,7 +92,7 @@ router.post('/save', async (req, res) => {
 });
 
 router.get('/list', async (req, res) => {
-  const { pageNo: page, pageSize: size, search, startTime, endTime, isExport, ...rest } = req.query;
+  const { pageNo: page, pageSize: size, search, order, startTime, endTime, ...rest } = req.query;
   const pageNo = +page || 1;
   const pageSize = size ? +size : null;
   const skip = (+pageNo - 1) * pageSize;
@@ -111,14 +112,14 @@ router.get('/list', async (req, res) => {
       };
     }
 
+    const sortObj = order ? { productType: order === 'ascend' ? -1 : 1 } : { updatedAt: -1 };
+
     const count = await Product.countDocuments(searchParams);
-    const list = isExport
-      ? await Product.find(searchParams)
-      : await Product.find(searchParams)
-          .limit(+pageSize)
-          .skip(skip)
-          .sort({ updatedAt: -1 })
-          .exec();
+    const list = await Product.find(searchParams)
+      .limit(+pageSize)
+      .skip(skip)
+      .sort(sortObj)
+      .exec();
 
     const params = {
       pageNo,

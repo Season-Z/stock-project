@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Modal, Input, InputNumber, Button } from 'antd';
+import { Form, Modal, Input, InputNumber, Button, message } from 'antd';
 
 const formItemLayout = {
   labelCol: {
@@ -27,9 +27,12 @@ function AccessModal(props) {
       }
 
       const { count, client } = values;
-      // if (!isStorage && count) {
-
-      // }
+      if (!isStorage) {
+        if (count && !client) {
+          message.error('请填写客户信息');
+          return;
+        }
+      }
 
       saveModal({ ...values, type });
     });

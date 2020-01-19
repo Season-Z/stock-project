@@ -7,6 +7,7 @@ module.exports = new Schema(
       default: true,
     },
     username: String,
+    client: String,
     count: Number,
     products: {
       type: Schema.Types.ObjectId,

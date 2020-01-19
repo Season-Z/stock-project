@@ -40,6 +40,11 @@ const columns = [
     key: 'username',
   },
   {
+    title: ' 客户信息',
+    dataIndex: 'client',
+    key: 'client',
+  },
+  {
     title: '创建时间',
     dataIndex: 'createdAt',
     key: 'createdAt',

@@ -26,6 +26,7 @@ export const columns = [
     dataIndex: 'productType',
     key: 'productType',
     width: '10%',
+    sorter: true,
   },
   {
     title: '产品名称',

@@ -19,11 +19,6 @@ function Stock(props) {
   const roleRef = useRef(getUserInfo());
   const [model, setModel] = useState({ visible: false, modalParams: {} });
   const [accessModel, setAccessModel] = useState({ visible: false, modalParams: {} });
-  const [otherSearch, setOtherSearch] = useState({
-    username: undefined,
-    startTime: undefined,
-    endTime: undefined,
-  });
   const [loading, setLoading] = useState(false);
   const [pages, setPages] = useState({
     pageNo: 1,
@@ -31,12 +26,13 @@ function Stock(props) {
     count: 0,
     data: [],
     search: '',
+    order: '',
   });
 
   useEffect(() => {
     queryData();
     /* eslint react-hooks/exhaustive-deps: "off" */
-  }, [pages.pageNo, pages.pageSize, pages.search]);
+  }, [pages.pageNo, pages.pageSize, pages.search, pages.order]);
 
   async function queryData(values = {}) {
     try {
@@ -46,6 +42,7 @@ function Stock(props) {
         pageNo: pages.pageNo,
         pageSize: pages.pageSize,
         search: pages.search,
+        order: pages.order,
       };
 
       const result = await request.get('/api/product/list', { params });
@@ -111,38 +108,30 @@ function Stock(props) {
 
   const userCallback = useCallback(value => {
     queryData({ username: value });
-    setOtherSearch(state => ({ ...state, username: value }));
   }, []);
   const dateCallback = useCallback(value => {
     queryData(value);
-    setOtherSearch(state => ({ ...state, ...value }));
   }, []);
 
   const exportProduct = async () => {
-    try {
-      setLoading(true);
-      const params = {
-        pageNo: 1,
-        search: pages.search,
-        isExport: true,
-        ...otherSearch,
-      };
-      const result = await request.get('/api/product/list', { params });
-      const data = result.data.data || [];
-      const exportData = data.map(v => ({
-        产品类别: v.productType,
-        产品名称: v.productName,
-        产品描述: v.productMemo,
-        库存数量: v.productCount,
-      }));
+    const exportData = pages.data.map(v => ({
+      产品类别: v.productType,
+      产品名称: v.productName,
+      产品描述: v.productMemo,
+      库存数量: v.productCount,
+    }));
 
-      const ExportExcel = new Export({ data: exportData, filename: '产品数据' });
-      ExportExcel.handleExport();
+    const ExportExcel = new Export({ data: exportData, filename: '产品数据' });
+    ExportExcel.handleExport();
+  };
 
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
+  const changeTable = (page, filter, sort) => {
+    setPages(state => ({
+      ...state,
+      pageNo: page.current,
+      pageSize: page.pageSize,
+      order: sort.order || '',
+    }));
   };
 
   const newColumns = columns.concat({
@@ -179,16 +168,6 @@ function Stock(props) {
     },
   });
 
-  const pagination = {
-    current: pages.pageNo,
-    total: pages.count,
-    pageSize: pages.pageSize,
-    onChange: val => setPages(state => ({ ...state, pageNo: val })),
-    onShowSizeChange: (page, size) => setPages(state => ({ ...state, pageNo: 1, pageSize: size })),
-    pageSizeOptions: ['10', '20', '40', '100', '500'],
-    showSizeChanger: true,
-    showTotal: total => `共 ${total} 条数据`,
-  };
   return (
     <Fragment>
       <PageHeader title={route.name} />
@@ -212,8 +191,16 @@ function Stock(props) {
         columns={newColumns}
         dataSource={pages.data}
         rowKey="_id"
-        pagination={pagination}
         loading={loading}
+        onChange={changeTable}
+        pagination={{
+          current: pages.pageNo,
+          total: pages.count,
+          pageSize: pages.pageSize,
+          pageSizeOptions: ['10', '20', '40', '100', '500'],
+          showSizeChanger: true,
+          showTotal: total => `共 ${total} 条数据`,
+        }}
         scroll={{ x: 1350 }}
       />
       {model.visible && (
