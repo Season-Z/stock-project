@@ -7,6 +7,7 @@ import AccessModal from './AccessModal';
 import DropdownMenu from '@/components/DropdownMenu';
 import CommonSearch from '@/components/CommonSearch';
 import Export from '@/utils/export';
+import UploadExcel from './UploadExcel';
 import request from '@/utils/request';
 import { columns } from './columns';
 import { getUserInfo } from '@/utils/config';
@@ -182,9 +183,12 @@ function Stock(props) {
           />
         )}
         renderBtn={() => (
-          <Button type="primary" onClick={exportProduct}>
-            导出
-          </Button>
+          <Fragment>
+            <UploadExcel action="/api/product/uploadExc" />
+            <Button type="primary" onClick={exportProduct} style={{ marginLeft: '8px' }}>
+              导出
+            </Button>
+          </Fragment>
         )}
       />
       <Table

@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
+const path = require('path');
 const fs = require('fs');
+const xlsx = require('node-xlsx');
 const Product = require('../models/Product');
 const Log = require('../models/Log');
 const { handleParams } = require('../utils/handler');
@@ -156,6 +158,61 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message || '服务器出错' });
+  }
+});
+
+const storageExcel = multer.diskStorage({
+  //确定存储的位置
+  destination: function(req, file, cb) {
+    cb(null, './public/excel');
+  },
+  //确定存储时的名字,注意，如果使用原名，可能会造成再次上传同一张的时候的冲突
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const uploadExcel = multer({ storage: storageExcel });
+router.post('/uploadExc', uploadExcel.single('file'), async (req, res) => {
+  try {
+    const prefix = path.join(__dirname, '../');
+    const data = xlsx.parse(prefix + req.file.path);
+
+    const dataList = data[0] ? data[0].data : [];
+    if (!dataList.length || dataList.length === 1) {
+      res.status(200).json({ success: false, message: '上传文件为空', data: {} });
+      return;
+    }
+    const loopList = dataList.slice(1);
+
+    const { username } = req.session;
+    let tureData = true;
+    for (let i = 0; i < loopList.length; i++) {
+      const element = loopList[i];
+      if (!element[0]) {
+        tureData = false;
+        break;
+      }
+
+      const product = new Product({
+        productType: element[0],
+        productName: element[1],
+        productMemo: element[2],
+        productCount: Number.isNaN(parseInt(element[3])) ? 0 : parseInt(element[3]),
+        isStorage: true,
+        username,
+      });
+
+      await product.save();
+    }
+
+    if (!tureData) {
+      res.status(200).json({ success: false, message: '有产品类别存在空值', data: {} });
+    }
+
+    res.status(200).json({ success: true, message: '上传成功', data: data });
+  } catch (error) {
+    console.log(error.toString());
+    res.status(500).json({ success: false, message: error ? error.toString() : '服务器出错' });
   }
 });
 

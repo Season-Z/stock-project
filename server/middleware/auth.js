@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
   }
 
   const result = checkToken(req.headers['authorization']);
+
   // token 过期
   if (!result) {
     res.status(200).json({ success: false, message: '请重新登录', code: 10000 });
