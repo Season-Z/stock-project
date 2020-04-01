@@ -174,8 +174,8 @@ const storageExcel = multer.diskStorage({
 const uploadExcel = multer({ storage: storageExcel });
 router.post('/uploadExc', uploadExcel.single('file'), async (req, res) => {
   try {
-    const prefix = path.join(__dirname, '../');
-    const data = xlsx.parse(prefix + req.file.path);
+    const filePath = path.join(__dirname, '../') + req.file.path;
+    const data = xlsx.parse(filePath);
 
     const dataList = data[0] ? data[0].data : [];
     if (!dataList.length || dataList.length === 1) {
@@ -185,14 +185,12 @@ router.post('/uploadExc', uploadExcel.single('file'), async (req, res) => {
     const loopList = dataList.slice(1);
 
     const { username } = req.session;
-    let tureData = true;
+
     for (let i = 0; i < loopList.length; i++) {
       const element = loopList[i];
-      if (!element[0]) {
-        tureData = false;
+      if (!element[1]) {
         break;
       }
-
       const product = new Product({
         productType: element[0],
         productName: element[1],
@@ -205,9 +203,7 @@ router.post('/uploadExc', uploadExcel.single('file'), async (req, res) => {
       await product.save();
     }
 
-    if (!tureData) {
-      res.status(200).json({ success: false, message: '有产品类别存在空值', data: {} });
-    }
+    await fs.unlinkSync(filePath);
 
     res.status(200).json({ success: true, message: '上传成功', data: data });
   } catch (error) {

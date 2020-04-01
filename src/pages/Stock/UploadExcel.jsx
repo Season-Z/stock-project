@@ -3,7 +3,7 @@ import { Upload, Button, Icon, message } from 'antd';
 import storage from '@/utils/storage';
 
 function UploadExcel(props) {
-  const { action } = props;
+  const { action, successCallback } = props;
 
   const uploadProps = {
     name: 'file',
@@ -29,8 +29,9 @@ function UploadExcel(props) {
           message.error(response.message);
           return;
         }
-        console.log(info.file, info.fileList);
-        message.success(`${name} file uploaded successfully`);
+
+        successCallback && successCallback();
+        message.success(`【${name}】上传成功`);
       } else if (status === 'error') {
         message.error(response.message);
       }

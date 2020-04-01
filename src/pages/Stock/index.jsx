@@ -113,6 +113,9 @@ function Stock(props) {
   const dateCallback = useCallback(value => {
     queryData(value);
   }, []);
+  const successCallback = useCallback(() => {
+    queryData();
+  }, []);
 
   const exportProduct = async () => {
     const exportData = pages.data.map(v => ({
@@ -184,7 +187,7 @@ function Stock(props) {
         )}
         renderBtn={() => (
           <Fragment>
-            <UploadExcel action="/api/product/uploadExc" />
+            <UploadExcel action="/api/product/uploadExc" successCallback={successCallback} />
             <Button type="primary" onClick={exportProduct} style={{ marginLeft: '8px' }}>
               导出
             </Button>
