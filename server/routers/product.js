@@ -182,16 +182,16 @@ router.post('/uploadExc', uploadExcel.single('file'), async (req, res) => {
       res.status(200).json({ success: false, message: '上传文件为空', data: {} });
       return;
     }
-    const loopList = dataList.slice(1);
-
+    const loopList = dataList.slice(1).filter(v => v.length);
     const { username } = req.session;
+    let insertData = [];
 
     for (let i = 0; i < loopList.length; i++) {
       const element = loopList[i];
       if (!element[1]) {
         break;
       }
-      const product = new Product({
+      insertData.push({
         productType: element[0],
         productName: element[1],
         productMemo: element[2],
@@ -199,8 +199,17 @@ router.post('/uploadExc', uploadExcel.single('file'), async (req, res) => {
         isStorage: true,
         username,
       });
+    }
 
-      await product.save();
+    const resData = await Product.insertMany(insertData);
+
+    if (resData.length !== loopList.length) {
+      res.status(200).json({
+        success: true,
+        message: '存在商品名为空的情况，其后的数据都不能添加成功',
+        data: data,
+      });
+      return;
     }
 
     await fs.unlinkSync(filePath);
